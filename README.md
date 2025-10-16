@@ -7,7 +7,7 @@
 
 ## Introduction
 
-[Add Introduction Here]
+Standard.AI.PeerLLM — A .NET client library for the PeerLLM REST API, enabling developers to integrate AI-powered solutions into their .NET applications.
 
 ## Standard-Compliance
 This library was built according to The Standard. The library follows engineering principles, patterns and tooling as recommended by [The Standard](https://github.com/hassanhabib/The-Standard).
