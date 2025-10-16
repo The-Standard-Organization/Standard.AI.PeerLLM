@@ -1,4 +1,4 @@
-# [REPOSITORY NAME]
+# [Standard.AI.PeerLLM]
 
 [ADD BUILD TILE]
 [![The Standard](https://img.shields.io/github/v/release/hassanhabib/The-Standard?filter=v2.10.2&style=default&label=Standard%20Version&color=2ea44f)](https://github.com/hassanhabib/The-Standard)
@@ -35,15 +35,8 @@ If you have any suggestions, comments or questions, please feel free to contact 
 >
 >[E-Mail](mailto:hassanhabib@live.com)
 
-### Past Sessions
-
->[YouTube Playlist Here]
-
-
 ### Important Notice and Acknowledgements
 A special thanks to all the community members, and the following dedicated engineers for their hard work and dedication to this project.
 >Mr. Hassan Habib
 >
 >Mr. Christo du Toit
->
->Mr. Gregory Hayes
