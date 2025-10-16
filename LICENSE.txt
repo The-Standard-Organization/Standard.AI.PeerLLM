@@ -1,4 +1,4 @@
-﻿Standard.AI.OpenAI - .NET Library
+﻿Standard.AI.PeerLLM - .NET Library
 
 Copyright (c) 2025 The Standard Community.
 
