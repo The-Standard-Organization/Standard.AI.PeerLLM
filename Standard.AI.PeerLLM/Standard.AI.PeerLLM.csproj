@@ -48,11 +48,11 @@
 
 	<ItemGroup>
 		<PackageReference Include="Xeption" Version="2.8.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.7" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.7" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.7" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.7" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.10" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
 	</ItemGroup>
 
 	<ItemGroup>
