@@ -20,6 +20,6 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
         public ValueTask<Guid> StartChatAsync(
             ChatSessionConfig chatSessionConfig,
             CancellationToken cancellationToken = default) =>
-                throw new NotImplementedException();
+                this.peerLLMBroker.StartChatAsync(chatSessionConfig, cancellationToken);
     }
 }
