@@ -62,7 +62,12 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
             CancellationToken cancellationToken = CancellationToken.None;
 
             var invalidChatSessionConfigException =
-                new InvalidChatSessionConfigException(message: "Chat session config is invalid.");
+                new InvalidChatSessionConfigException(
+                    message: "Invalid chat session config. Please correct the errors and try again.");
+
+            invalidChatSessionConfigException.AddData(
+                key: nameof(ChatSessionConfig.ModelName),
+                values: "Text is required");
 
             var expectedChatValidationException =
                 new ChatValidationException(

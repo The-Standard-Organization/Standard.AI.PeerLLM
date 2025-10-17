@@ -23,6 +23,10 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
             {
                 throw await CreateValidationExceptionAsync(nullChatSessionConfigException);
             }
+            catch (InvalidChatSessionConfigException invalidChatSessionConfigException)
+            {
+                throw await CreateValidationExceptionAsync(invalidChatSessionConfigException);
+            }
         }
 
         private async ValueTask<ChatValidationException> CreateValidationExceptionAsync(Xeption exception)
