@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Standard.AI.PeerLLM.Models.Foundations.Chats.Exceptions;
@@ -13,6 +14,7 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
     internal partial class ChatService : IChatService
     {
         private delegate ValueTask<Guid> ReturningGuidFunction();
+        private delegate IAsyncEnumerable<string> ReturninStringEnumerableFunction();
 
         private async ValueTask<Guid> TryCatch(ReturningGuidFunction returningGuidFunction)
         {
@@ -22,11 +24,11 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
             }
             catch (NullChatSessionConfigException nullChatSessionConfigException)
             {
-                throw await CreateValidationExceptionAsync(nullChatSessionConfigException);
+                throw CreateValidationException(nullChatSessionConfigException);
             }
             catch (InvalidChatSessionConfigException invalidChatSessionConfigException)
             {
-                throw await CreateValidationExceptionAsync(invalidChatSessionConfigException);
+                throw CreateValidationException(invalidChatSessionConfigException);
             }
             catch (HttpRequestException httpRequestException)
             {
@@ -49,7 +51,20 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
             }
         }
 
-        private async ValueTask<ChatValidationException> CreateValidationExceptionAsync(Xeption exception)
+        private IAsyncEnumerable<string> TryCatch(
+            ReturninStringEnumerableFunction returninStringEnumerableFunction)
+        {
+            try
+            {
+                return returninStringEnumerableFunction();
+            }
+            catch (InvalidChatSessionConfigException invalidChatSessionConfigException)
+            {
+                throw CreateValidationException(invalidChatSessionConfigException);
+            }
+        }
+
+        private ChatValidationException CreateValidationException(Xeption exception)
         {
             var chatValidationException =
                 new ChatValidationException(

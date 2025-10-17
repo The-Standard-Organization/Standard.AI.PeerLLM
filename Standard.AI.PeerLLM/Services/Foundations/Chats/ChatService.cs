@@ -32,6 +32,11 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
             Guid conversationId,
             string text,
             CancellationToken cancellationToken = default) =>
-                this.peerLLMBroker.StreamChatAsync(conversationId, text, cancellationToken);
+            TryCatch(() =>
+            {
+                ValidateOnStreamChat(conversationId, text);
+
+                return this.peerLLMBroker.StreamChatAsync(conversationId, text, cancellationToken);
+            });
     }
 }

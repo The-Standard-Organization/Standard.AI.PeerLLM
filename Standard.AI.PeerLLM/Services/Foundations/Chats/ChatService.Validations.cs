@@ -22,6 +22,17 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
                 (Rule: IsInvalid(chatSessionConfig.ModelName), Parameter: nameof(ChatSessionConfig.ModelName)));
         }
 
+        private static void ValidateOnStreamChat(Guid conversationId, string text)
+        {
+
+            Validate(
+                exceptionFactory: () => new InvalidChatSessionConfigException(
+                    message: "Invalid stream chat arguments. Please correct the errors and try again."),
+
+                (Rule: IsInvalid(conversationId), Parameter: nameof(conversationId)),
+                (Rule: IsInvalid(text), Parameter: nameof(text)));
+        }
+
         private static void ValidateChatSessionConfigNotNull(ChatSessionConfig chatSessionConfig)
         {
             if (chatSessionConfig is null)
@@ -29,6 +40,12 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
                 throw new NullChatSessionConfigException(message: "ChatSessionConfig is null.");
             }
         }
+
+        private static dynamic IsInvalid(Guid id) => new
+        {
+            Condition = id == Guid.Empty,
+            Message = "Id is required"
+        };
 
         private static dynamic IsInvalid(string? text) => new
         {

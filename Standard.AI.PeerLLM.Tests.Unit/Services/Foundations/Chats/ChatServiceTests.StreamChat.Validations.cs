@@ -26,7 +26,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
 
             var invalidChatSessionConfigException =
                 new InvalidChatSessionConfigException(
-                    message: "Invalid chat session config. Please correct the errors and try again.");
+                    message: "Invalid stream chat arguments. Please correct the errors and try again.");
 
             invalidChatSessionConfigException.AddData(
                 key: "conversationId",
