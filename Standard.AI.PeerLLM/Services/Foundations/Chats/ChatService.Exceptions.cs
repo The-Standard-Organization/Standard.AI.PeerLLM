@@ -115,25 +115,6 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
             {
                 throw CreateValidationException(invalidArgumentsChatException);
             }
-            catch (HttpRequestException httpRequestException)
-            {
-                var hostNotFoundException = new HostNotFoundChatException(
-                    message: "No hosts available for this model",
-                    innerException: httpRequestException,
-                    data: httpRequestException.Data);
-
-                throw CreateDependencyValidationException(hostNotFoundException);
-            }
-            catch (Exception exception)
-            {
-                var failedChatServiceException =
-                    new FailedChatServiceException(
-                        message: "Failed chat service exception occurred, please contact support for assistance.",
-                        innerException: exception,
-                        data: exception.Data);
-
-                throw CreateServiceException(failedChatServiceException);
-            }
         }
 
         private ChatValidationException CreateValidationException(Xeption exception)
