@@ -24,22 +24,22 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
             string inputText = invalidText;
             CancellationToken cancellationToken = CancellationToken.None;
 
-            var invalidChatSessionConfigException =
-                new InvalidChatSessionConfigException(
-                    message: "Invalid stream chat arguments. Please correct the errors and try again.");
+            var invalidArgumentsChatException =
+                new InvalidArgumentsChatException(
+                    message: "Invalid chat arguments. Please correct the errors and try again.");
 
-            invalidChatSessionConfigException.AddData(
+            invalidArgumentsChatException.AddData(
                 key: "conversationId",
                 values: "Id is required");
 
-            invalidChatSessionConfigException.AddData(
+            invalidArgumentsChatException.AddData(
                 key: "text",
                 values: "Text is required");
 
             var expectedChatValidationException =
                 new ChatValidationException(
                     message: "Chat validation error occurred, fix errors and try again.",
-                    innerException: invalidChatSessionConfigException);
+                    innerException: invalidArgumentsChatException);
 
             // when
             Task StreamChatTask() => EnumerateAsync(

@@ -26,11 +26,21 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
         {
 
             Validate(
-                exceptionFactory: () => new InvalidChatSessionConfigException(
-                    message: "Invalid stream chat arguments. Please correct the errors and try again."),
+                exceptionFactory: () => new InvalidArgumentsChatException(
+                    message: "Invalid chat arguments. Please correct the errors and try again."),
 
                 (Rule: IsInvalid(conversationId), Parameter: nameof(conversationId)),
                 (Rule: IsInvalid(text), Parameter: nameof(text)));
+        }
+
+        private static void ValidateOnEndChat(Guid conversationId)
+        {
+
+            Validate(
+                exceptionFactory: () => new InvalidArgumentsChatException(
+                    message: "Invalid chat arguments. Please correct the errors and try again."),
+
+                (Rule: IsInvalid(conversationId), Parameter: nameof(conversationId)));
         }
 
         private static void ValidateChatSessionConfigNotNull(ChatSessionConfig chatSessionConfig)
