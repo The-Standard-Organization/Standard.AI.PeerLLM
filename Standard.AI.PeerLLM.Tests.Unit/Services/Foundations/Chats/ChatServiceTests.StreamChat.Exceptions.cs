@@ -76,7 +76,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                     inner: null,
                     statusCode: System.Net.HttpStatusCode.NotFound);
 
-            var hostNotFoundChatException =
+            var conversationNotFoundChatException =
                 new ConversationNotFoundChatException(
                     message: "Conversation not found",
                     innerException: httpRequestException,
@@ -85,7 +85,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
             var expectedChatDependencyValidationException =
                 new ChatDependencyValidationException(
                     message: "Chat dependency validation error occurred, fix errors and try again.",
-                    innerException: hostNotFoundChatException);
+                    innerException: conversationNotFoundChatException);
 
             this.peerLLMBrokerMock.Setup(broker =>
                 broker.StreamChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
