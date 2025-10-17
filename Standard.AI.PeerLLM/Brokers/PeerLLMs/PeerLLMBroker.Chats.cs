@@ -32,5 +32,17 @@ namespace Standard.AI.PeerLLM.Brokers.PeerLLMs
                 content: new { ConversationId = conversationId, Text = text },
                 cancellationToken);
         }
+
+        public async ValueTask<string> EndChatAsync(
+            Guid conversationId,
+            CancellationToken cancellationToken = default)
+        {
+            dynamic response = await PostJsonAsync<Guid, dynamic>(
+                relativeUrl: "chats/end",
+                content: conversationId,
+                cancellationToken);
+
+            return response.GetProperty("message").GetString();
+        }
     }
 }
