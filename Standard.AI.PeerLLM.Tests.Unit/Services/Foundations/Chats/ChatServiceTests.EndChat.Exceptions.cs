@@ -151,5 +151,46 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnEndChatIfErrorOccurredAsync()
+        {
+            // given
+            Guid someConversationId = Guid.NewGuid();
+            string someText = GetRandomString();
+            CancellationToken cancellationToken = CancellationToken.None;
+            var serviceException = new Exception();
+
+            var failedChatServiceException =
+                new FailedChatServiceException(
+                    message: "Failed chat service exception occurred, please contact support for assistance.",
+                    innerException: serviceException,
+                    data: serviceException.Data);
+
+            var expectedChatServiceException =
+                new ChatServiceException(
+                    message: "Chat service error occurred, please contact support.",
+                    innerException: failedChatServiceException);
+
+            this.peerLLMBrokerMock.Setup(broker =>
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                    .Throws(serviceException);
+
+            // when
+            ValueTask<string> endChatTask = this.chatService.EndChatAsync(someConversationId, cancellationToken);
+
+            ChatServiceException actualChatServiceException =
+                await Assert.ThrowsAsync<ChatServiceException>(endChatTask.AsTask);
+
+            // then
+            actualChatServiceException.Should()
+                .BeEquivalentTo(expectedChatServiceException);
+
+            this.peerLLMBrokerMock.Verify(broker =>
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()),
+                    Times.Once);
+
+            this.peerLLMBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
