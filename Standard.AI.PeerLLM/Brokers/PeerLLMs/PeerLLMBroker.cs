@@ -71,9 +71,12 @@ namespace Standard.AI.PeerLLM.Brokers.PeerLLMs
             if (!response.IsSuccessStatusCode)
             {
                 var body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+
                 throw new HttpRequestException(
                     $"Unexpected status code {(int)response.StatusCode} ({response.StatusCode}). " +
-                    $"Response body: {body}");
+                    $"Response body: {body}",
+                    inner: null,
+                    statusCode: response.StatusCode);
             }
 
             await using var responseStream =
