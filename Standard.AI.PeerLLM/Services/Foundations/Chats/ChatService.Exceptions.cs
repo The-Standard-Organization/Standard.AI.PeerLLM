@@ -37,6 +37,16 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
 
                 throw CreateDependencyValidationException(hostNotFoundException);
             }
+            catch (Exception exception)
+            {
+                var failedChatServiceException =
+                    new FailedChatServiceException(
+                        message: "Failed chat service exception occurred, please contact support for assistance.",
+                        innerException: exception,
+                        data: exception.Data);
+
+                throw CreateServiceException(failedChatServiceException);
+            }
         }
 
         private async ValueTask<ChatValidationException> CreateValidationExceptionAsync(Xeption exception)
@@ -57,6 +67,16 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
                     innerException: exception);
 
             return chatDependencyValidationException;
+        }
+
+        private ChatServiceException CreateServiceException(Xeption exception)
+        {
+            var chatServiceException =
+                new ChatServiceException(
+                    message: "Chat service error occurred, please contact support.",
+                    innerException: exception);
+
+            return chatServiceException;
         }
     }
 }
