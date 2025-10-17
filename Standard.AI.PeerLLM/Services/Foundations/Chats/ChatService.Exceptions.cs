@@ -115,6 +115,16 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
             {
                 throw CreateValidationException(invalidArgumentsChatException);
             }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var hostNotFoundException = new HostNotFoundChatException(
+                    message: "Host unavailable",
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(hostNotFoundException);
+            }
         }
 
         private ChatValidationException CreateValidationException(Xeption exception)
