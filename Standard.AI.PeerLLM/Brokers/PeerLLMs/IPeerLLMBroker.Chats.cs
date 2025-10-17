@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------------------
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Standard.AI.PeerLLM.Models.Foundations.Chats;
 
@@ -10,6 +11,8 @@ namespace Standard.AI.PeerLLM.Brokers.PeerLLMs
 {
     internal partial interface IPeerLLMBroker
     {
-        ValueTask<Guid> StartChatSessionAsync(ChatSessionConfig chatSessionConfig);
+        ValueTask<Guid> StartChatSessionAsync(
+            ChatSessionConfig chatSessionConfig,
+            CancellationToken cancellationToken = default);
     }
 }

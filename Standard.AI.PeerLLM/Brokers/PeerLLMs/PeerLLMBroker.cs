@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Standard.AI.PeerLLM.Models.Configurations;
 
@@ -23,7 +24,10 @@ namespace Standard.AI.PeerLLM.Brokers.PeerLLMs
             this.httpClient = SetupHttpClient();
         }
 
-        private async ValueTask<TResult> PostJsonAsync<TRequest, TResult>(string relativeUrl, TRequest content)
+        private async ValueTask<TResult> PostJsonAsync<TRequest, TResult>(
+            string relativeUrl,
+            TRequest content,
+            CancellationToken cancellationToken = default)
         {
             var json = JsonSerializer.Serialize(content);
 
@@ -32,7 +36,11 @@ namespace Standard.AI.PeerLLM.Brokers.PeerLLMs
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
 
-            using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+            using var response = await httpClient.SendAsync(
+                request,
+                completionOption: HttpCompletionOption.ResponseContentRead,
+                cancellationToken);
+
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
 
