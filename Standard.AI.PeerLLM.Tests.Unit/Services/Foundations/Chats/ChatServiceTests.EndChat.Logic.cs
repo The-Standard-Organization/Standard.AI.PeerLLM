@@ -3,7 +3,6 @@
 // ----------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -14,29 +13,26 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
     public partial class ChatServiceTests
     {
         [Fact]
-        public async Task ShouldStreamChatAsync()
+        public async Task ShouldEndChatAsync()
         {
             // given
             Guid inputConversationId = Guid.NewGuid();
-            string inputText = GetRandomString();
             CancellationToken cancellationToken = CancellationToken.None;
-            var expectedItems = await ToListAsync(GetAsyncEnumerableOfRandomStrings(), cancellationToken);
+            string outputText = GetRandomString();
+            string expectedText = outputText;
 
             this.peerLLMBrokerMock.Setup(broker =>
-                broker.StreamChatAsync(inputConversationId, inputText, cancellationToken))
-                    .Returns(ToAsyncStream(expectedItems));
+                broker.EndChatAsync(inputConversationId, cancellationToken))
+                    .ReturnsAsync(outputText);
 
             // when
-            IAsyncEnumerable<string> actualResponse =
-                this.chatService.StreamChatAsync(inputConversationId, inputText, cancellationToken);
-
-            var actualList = await ToListAsync(actualResponse, cancellationToken);
+            string actualText = await this.chatService.EndChatAsync(inputConversationId, cancellationToken);
 
             // then
-            actualList.Should().Equal(expectedItems);
+            actualText.Should().BeEquivalentTo(expectedText);
 
             this.peerLLMBrokerMock.Verify(broker =>
-                broker.StreamChatAsync(inputConversationId, inputText, cancellationToken),
+                broker.EndChatAsync(inputConversationId, cancellationToken),
                     Times.Once);
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();

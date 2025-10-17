@@ -15,6 +15,7 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
     internal partial class ChatService : IChatService
     {
         private delegate ValueTask<Guid> ReturningGuidFunction();
+        private delegate ValueTask<string> ReturningStringFunction();
         private delegate IAsyncEnumerable<string> ReturninStringEnumerableFunction();
 
         private async ValueTask<Guid> TryCatch(ReturningGuidFunction returningGuidFunction)
@@ -59,9 +60,60 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
             {
                 return returninStringEnumerableFunction();
             }
-            catch (InvalidChatSessionConfigException invalidChatSessionConfigException)
+            catch (InvalidArgumentsChatException invalidArgumentsChatException)
             {
-                throw CreateValidationException(invalidChatSessionConfigException);
+                throw CreateValidationException(invalidArgumentsChatException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var hostNotFoundException = new HostNotFoundChatException(
+                    message: "Host unavailable",
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(hostNotFoundException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.NotFound)
+            {
+                var conversationNotFoundChatException = new ConversationNotFoundChatException(
+                    message: "Conversation not found",
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(conversationNotFoundChatException);
+            }
+            catch (HttpRequestException httpRequestException)
+            {
+                var externalChatException = new ExternalChatException(
+                    message: "External validation error",
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(externalChatException);
+            }
+            catch (Exception exception)
+            {
+                var failedChatServiceException =
+                    new FailedChatServiceException(
+                        message: "Failed chat service exception occurred, please contact support for assistance.",
+                        innerException: exception,
+                        data: exception.Data);
+
+                throw CreateServiceException(failedChatServiceException);
+            }
+        }
+
+        private async ValueTask<string> TryCatch(ReturningStringFunction returningStringFunction)
+        {
+            try
+            {
+                return await returningStringFunction();
+            }
+            catch (InvalidArgumentsChatException invalidArgumentsChatException)
+            {
+                throw CreateValidationException(invalidArgumentsChatException);
             }
             catch (HttpRequestException httpRequestException)
                 when (httpRequestException.StatusCode == HttpStatusCode.BadRequest)

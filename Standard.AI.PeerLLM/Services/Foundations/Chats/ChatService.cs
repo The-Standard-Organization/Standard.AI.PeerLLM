@@ -32,11 +32,19 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
             Guid conversationId,
             string text,
             CancellationToken cancellationToken = default) =>
-            TryCatch(() =>
-            {
-                ValidateOnStreamChat(conversationId, text);
+        TryCatch(() =>
+        {
+            ValidateOnStreamChat(conversationId, text);
 
-                return this.peerLLMBroker.StreamChatAsync(conversationId, text, cancellationToken);
-            });
+            return this.peerLLMBroker.StreamChatAsync(conversationId, text, cancellationToken);
+        });
+
+        public ValueTask<string> EndChatAsync(Guid conversationId, CancellationToken cancellationToken = default) =>
+        TryCatch(async () =>
+        {
+            ValidateOnEndChat(conversationId);
+
+            return await this.peerLLMBroker.EndChatAsync(conversationId, cancellationToken);
+        });
     }
 }
