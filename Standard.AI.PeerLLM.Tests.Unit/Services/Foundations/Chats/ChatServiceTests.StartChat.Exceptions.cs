@@ -28,16 +28,16 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                     inner: null,
                     statusCode: System.Net.HttpStatusCode.BadRequest);
 
-            var hostNotFoundException =
-                new HostNotFoundException(
+            var hostNotFoundChatException =
+                new HostNotFoundChatException(
                     message: "No hosts available for this model",
                     innerException: badRequestException,
                     data: badRequestException.Data);
 
             var expectedChatDependencyValidationException =
                 new ChatDependencyValidationException(
-                    message: "Chat dependency validation error occurred, fix input and try again.",
-                    innerException: hostNotFoundException);
+                    message: "Chat dependency validation error occurred, fix errors and try again.",
+                    innerException: hostNotFoundChatException);
 
             this.peerLLMBrokerMock.Setup(broker =>
                 broker.StartChatAsync(someChatSessionConfig, cancellationToken))

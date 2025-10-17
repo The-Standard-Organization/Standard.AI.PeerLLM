@@ -8,9 +8,9 @@ using Xeptions;
 
 namespace Standard.AI.PeerLLM.Models.Foundations.Chats.Exceptions
 {
-    public class HostNotFoundException : Xeption
+    public class HostNotFoundChatException : Xeption
     {
-        public HostNotFoundException(string message, Exception innerException, IDictionary data)
+        public HostNotFoundChatException(string message, Exception innerException, IDictionary data)
             : base(message, innerException, data)
         { }
     }

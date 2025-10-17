@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------------------
 
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Standard.AI.PeerLLM.Models.Foundations.Chats.Exceptions;
 using Xeptions;
@@ -27,6 +28,15 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
             {
                 throw await CreateValidationExceptionAsync(invalidChatSessionConfigException);
             }
+            catch (HttpRequestException httpRequestException)
+            {
+                var hostNotFoundException = new HostNotFoundChatException(
+                    message: "No hosts available for this model",
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(hostNotFoundException);
+            }
         }
 
         private async ValueTask<ChatValidationException> CreateValidationExceptionAsync(Xeption exception)
@@ -37,6 +47,16 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
                     innerException: exception);
 
             return chatValidationException;
+        }
+
+        private ChatDependencyValidationException CreateDependencyValidationException(Xeption exception)
+        {
+            var chatDependencyValidationException =
+                new ChatDependencyValidationException(
+                    message: "Chat dependency validation error occurred, fix errors and try again.",
+                    innerException: exception);
+
+            return chatDependencyValidationException;
         }
     }
 }
