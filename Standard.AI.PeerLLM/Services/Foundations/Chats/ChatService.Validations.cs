@@ -24,7 +24,6 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
 
         private static void ValidateOnStreamChat(Guid conversationId, string text)
         {
-
             Validate(
                 exceptionFactory: () => new InvalidArgumentsChatException(
                     message: "Invalid chat arguments. Please correct the errors and try again."),
@@ -35,7 +34,6 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
 
         private static void ValidateOnEndChat(Guid conversationId)
         {
-
             Validate(
                 exceptionFactory: () => new InvalidArgumentsChatException(
                     message: "Invalid chat arguments. Please correct the errors and try again."),
