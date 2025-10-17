@@ -2,9 +2,9 @@
 // Copyright (c) The Standard Organization: A coalition of the Good-Hearted Engineers
 // ----------------------------------------------------------------------------------
 
-using STX.PeerLLM.Infrastructure.Services;
+using Standard.AI.PeerLLM.Infrastructure.Services;
 
-namespace STX.PeerLLM.Infrastructure
+namespace Standard.AI.PeerLLM.Infrastructure
 {
     internal class Program
     {

@@ -47,6 +47,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="RESTFulSense" Version="3.2.0" />
 		<PackageReference Include="Xeption" Version="2.8.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.10" />
