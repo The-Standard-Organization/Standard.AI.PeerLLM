@@ -25,7 +25,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
 
             var expectedChatValidationException =
                 new ChatValidationException(
-                    message: "Chat validation errors occurred, please try again.",
+                    message: "Chat validation error occurred, fix errors and try again.",
                     innerException: nullChatSessionConfigException);
             // when
             ValueTask<Guid> startChatTask =
