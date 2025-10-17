@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Standard.AI.PeerLLM.Models.Foundations.Chats.Exceptions;
@@ -61,6 +62,16 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
             catch (InvalidChatSessionConfigException invalidChatSessionConfigException)
             {
                 throw CreateValidationException(invalidChatSessionConfigException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var hostNotFoundException = new HostNotFoundChatException(
+                    message: "Host unavailable",
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(hostNotFoundException);
             }
         }
 
