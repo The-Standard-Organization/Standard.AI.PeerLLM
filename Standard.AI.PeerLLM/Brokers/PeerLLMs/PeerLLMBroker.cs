@@ -3,8 +3,10 @@
 // ----------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -47,6 +49,48 @@ namespace Standard.AI.PeerLLM.Brokers.PeerLLMs
             return JsonSerializer.Deserialize<TResult>(responseBody)
                 ?? throw new InvalidOperationException(
                     $"Failed to deserialize {typeof(TResult).Name} from response body: {responseBody}");
+        }
+
+        private async IAsyncEnumerable<string> PostJsonStreamAsync<TRequest>(
+            string relativeUrl,
+            TRequest content,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            var json = JsonSerializer.Serialize(content);
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, relativeUrl)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+
+            using var response = await httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken).ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                throw new HttpRequestException(
+                    $"Unexpected status code {(int)response.StatusCode} ({response.StatusCode}). " +
+                    $"Response body: {body}");
+            }
+
+            await using var responseStream =
+                await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+
+            var jsonOptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            await foreach (var token in JsonSerializer
+                .DeserializeAsyncEnumerable<string>(responseStream, jsonOptions, cancellationToken)
+                .ConfigureAwait(false))
+            {
+                if (token is not null)
+                    yield return token;
+            }
         }
 
         private HttpClient SetupHttpClient()
