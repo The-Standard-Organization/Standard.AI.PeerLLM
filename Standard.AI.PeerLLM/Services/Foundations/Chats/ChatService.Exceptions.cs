@@ -144,6 +144,16 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
 
                 throw CreateDependencyValidationException(externalChatException);
             }
+            catch (Exception exception)
+            {
+                var failedChatServiceException =
+                    new FailedChatServiceException(
+                        message: "Failed chat service exception occurred, please contact support for assistance.",
+                        innerException: exception,
+                        data: exception.Data);
+
+                throw CreateServiceException(failedChatServiceException);
+            }
         }
 
         private ChatValidationException CreateValidationException(Xeption exception)
