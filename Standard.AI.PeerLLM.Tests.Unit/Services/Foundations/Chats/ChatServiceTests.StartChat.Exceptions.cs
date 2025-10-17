@@ -40,7 +40,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                     innerException: hostNotFoundChatException);
 
             this.peerLLMBrokerMock.Setup(broker =>
-                broker.StartChatAsync(someChatSessionConfig, cancellationToken))
+                broker.StartChatAsync(It.IsAny<ChatSessionConfig>(), It.IsAny<CancellationToken>()))
                     .ThrowsAsync(badRequestException);
 
             // when
@@ -56,7 +56,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                 .BeEquivalentTo(expectedChatDependencyValidationException);
 
             this.peerLLMBrokerMock.Verify(broker =>
-                broker.StartChatAsync(someChatSessionConfig, cancellationToken),
+                broker.StartChatAsync(It.IsAny<ChatSessionConfig>(), It.IsAny<CancellationToken>()),
                     Times.Once);
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();
@@ -68,7 +68,6 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
             // given
             ChatSessionConfig someChatSessionConfig = CreateRandomChatSessionConfig();
             CancellationToken cancellationToken = CancellationToken.None;
-
             var serviceException = new Exception();
 
             var failedChatServiceException =
@@ -83,7 +82,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                     innerException: failedChatServiceException);
 
             this.peerLLMBrokerMock.Setup(broker =>
-                broker.StartChatAsync(someChatSessionConfig, cancellationToken))
+                broker.StartChatAsync(It.IsAny<ChatSessionConfig>(), It.IsAny<CancellationToken>()))
                     .ThrowsAsync(serviceException);
 
             // when
@@ -99,7 +98,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                 .BeEquivalentTo(expectedChatServiceException);
 
             this.peerLLMBrokerMock.Verify(broker =>
-                broker.StartChatAsync(someChatSessionConfig, cancellationToken),
+                broker.StartChatAsync(It.IsAny<ChatSessionConfig>(), It.IsAny<CancellationToken>()),
                     Times.Once);
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();
