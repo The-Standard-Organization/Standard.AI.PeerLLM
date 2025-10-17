@@ -40,6 +40,6 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
         });
 
         public ValueTask<string> EndChatAsync(Guid conversationId, CancellationToken cancellationToken = default) =>
-            throw new NotImplementedException();
+            this.peerLLMBroker.EndChatAsync(conversationId, cancellationToken);
     }
 }
