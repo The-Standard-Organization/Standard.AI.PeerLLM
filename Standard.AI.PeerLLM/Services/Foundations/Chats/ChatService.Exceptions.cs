@@ -83,6 +83,15 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
 
                 throw CreateDependencyValidationException(conversationNotFoundChatException);
             }
+            catch (HttpRequestException httpRequestException)
+            {
+                var externalChatException = new ExternalChatException(
+                    message: "External validation error",
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(externalChatException);
+            }
         }
 
         private ChatValidationException CreateValidationException(Xeption exception)
