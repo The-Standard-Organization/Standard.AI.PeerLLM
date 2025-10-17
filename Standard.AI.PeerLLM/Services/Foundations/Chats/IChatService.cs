@@ -20,5 +20,9 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
             Guid conversationId,
             string text,
             CancellationToken cancellationToken = default);
+
+        ValueTask<string> EndChatAsync(
+            Guid conversationId,
+            CancellationToken cancellationToken = default);
     }
 }
