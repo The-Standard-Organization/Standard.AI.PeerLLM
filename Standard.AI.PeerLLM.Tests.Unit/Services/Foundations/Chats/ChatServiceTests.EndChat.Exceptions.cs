@@ -59,5 +59,51 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnEndChatIfNotFoundErrorOccurredAsync()
+        {
+            // given
+            Guid someConversationId = Guid.NewGuid();
+            string someText = GetRandomString();
+            CancellationToken cancellationToken = CancellationToken.None;
+
+            var httpRequestException =
+                new HttpRequestException(
+                    message: "Conversation not found",
+                    inner: null,
+                    statusCode: System.Net.HttpStatusCode.NotFound);
+
+            var conversationNotFoundChatException =
+                new ConversationNotFoundChatException(
+                    message: "Conversation not found",
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+            var expectedChatDependencyValidationException =
+                new ChatDependencyValidationException(
+                    message: "Chat dependency validation error occurred, fix errors and try again.",
+                    innerException: conversationNotFoundChatException);
+
+            this.peerLLMBrokerMock.Setup(broker =>
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                    .Throws(httpRequestException);
+
+            // when
+            ValueTask<string> endChatTask = this.chatService.EndChatAsync(someConversationId, cancellationToken);
+
+            ChatDependencyValidationException actualChatDependencyValidationException =
+                await Assert.ThrowsAsync<ChatDependencyValidationException>(endChatTask.AsTask);
+
+            // then
+            actualChatDependencyValidationException.Should()
+                .BeEquivalentTo(expectedChatDependencyValidationException);
+
+            this.peerLLMBrokerMock.Verify(broker =>
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()),
+                    Times.Once);
+
+            this.peerLLMBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
