@@ -9,7 +9,7 @@ using ADotNet.Models.Pipelines.GithubPipelines.DotNets;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks.SetupDotNetTaskV3s;
 
-namespace STX.PeerLLM.Infrastructure.Services
+namespace Standard.AI.PeerLLM.Infrastructure.Services
 {
     internal class ScriptGenerationService
     {
