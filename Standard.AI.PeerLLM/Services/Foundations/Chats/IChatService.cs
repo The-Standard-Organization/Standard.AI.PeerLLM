@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Standard.AI.PeerLLM.Models.Foundations.Chats;
@@ -13,6 +14,11 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
     {
         ValueTask<Guid> StartChatAsync(
             ChatSessionConfig chatSessionConfig,
+            CancellationToken cancellationToken = default);
+
+        IAsyncEnumerable<string> StreamChatAsync(
+            Guid conversationId,
+            string text,
             CancellationToken cancellationToken = default);
     }
 }

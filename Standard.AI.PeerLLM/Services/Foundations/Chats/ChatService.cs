@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Standard.AI.PeerLLM.Brokers.PeerLLMs;
@@ -26,5 +27,11 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
 
             return await this.peerLLMBroker.StartChatAsync(chatSessionConfig, cancellationToken);
         });
+
+        public IAsyncEnumerable<string> StreamChatAsync(
+            Guid conversationId,
+            string text,
+            CancellationToken cancellationToken = default) =>
+                throw new NotImplementedException();
     }
 }
