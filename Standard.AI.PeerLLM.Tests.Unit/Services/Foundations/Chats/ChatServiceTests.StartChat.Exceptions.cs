@@ -16,7 +16,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
     public partial class ChatServiceTests
     {
         [Fact]
-        public async Task ShouldThrowDependencyValidationExceptionOnStartChatIfBadRequestOccurredAsync()
+        public async Task ShouldThrowDependencyValidationExceptionOnStartChatIfBadRequestErrorOccurredAsync()
         {
             // given
             ChatSessionConfig someChatSessionConfig = CreateRandomChatSessionConfig();
