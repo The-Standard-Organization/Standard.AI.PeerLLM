@@ -16,7 +16,7 @@ namespace Standard.AI.PeerLLM.Tests.Acceptance.Clients.V2.Chats
     public partial class ChatClientV2Tests : IDisposable
     {
         [Fact]
-        public async Task ShouldStartChat()
+        public async Task ShouldStartChatAsync()
         {
             // given
             ChatSessionConfigV2 chatSessionConfig = new ChatSessionConfigV2

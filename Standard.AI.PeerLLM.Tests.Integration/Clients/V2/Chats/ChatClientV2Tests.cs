@@ -7,11 +7,11 @@ using Standard.AI.PeerLLM.Models.Configurations;
 
 namespace Standard.AI.PeerLLM.Tests.Integration.Clients.V2.Chats
 {
-    public partial class ChatClientV1Tests
+    public partial class ChatClientV2Tests
     {
         private readonly IPeerLLMClient peerLLMClient;
 
-        public ChatClientV1Tests()
+        public ChatClientV2Tests()
         {
             var peerLLMConfiguration = new PeerLLMConfiguration();
             this.peerLLMClient = new PeerLLMClient(peerLLMConfiguration);
