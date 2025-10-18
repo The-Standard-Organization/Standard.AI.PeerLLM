@@ -107,7 +107,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
 
             var expectedChatClientServiceException =
                 new ChatClientServiceException(
-                    message: "Chat client dependency error occurred, contact support.",
+                    message: "Chat client service error occurred, contact support.",
                     innerException: failedChatClientServiceException as Xeption,
                     data: failedChatClientServiceException.Data);
 

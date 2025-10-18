@@ -49,6 +49,16 @@ namespace Standard.AI.PeerLLM.Clients.Chats
                 throw CreateChatClientDependencyException(
                     chatServiceException.InnerException as Xeption);
             }
+            catch (Exception exception)
+            {
+                var failedChatClientServiceException =
+                    new FailedChatClientServiceException(
+                        message: "Failed chat client service error occurred, contact support.",
+                        innerException: exception,
+                        data: exception.Data);
+
+                throw CreateChatClientServiceException(failedChatClientServiceException);
+            }
         }
 
         public IAsyncEnumerable<string> StreamChatAsync(
@@ -76,6 +86,15 @@ namespace Standard.AI.PeerLLM.Clients.Chats
         {
             return new ChatClientDependencyException(
                 message: "Chat client dependency error occurred, contact support.",
+                innerException,
+                data: innerException.Data);
+        }
+
+        private static ChatClientServiceException CreateChatClientServiceException(
+            Xeption innerException)
+        {
+            return new ChatClientServiceException(
+                message: "Chat client service error occurred, contact support.",
                 innerException,
                 data: innerException.Data);
         }
