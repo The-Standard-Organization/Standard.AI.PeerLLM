@@ -7,8 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using Standard.AI.PeerLLM.Models.Clients.Chats.Exceptions;
 using Standard.AI.PeerLLM.Models.Foundations.Chats;
-using Standard.AI.PeerLLM.Models.Foundations.Chats.Exceptions;
 using Xeptions;
 
 namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
@@ -83,6 +83,49 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
             // then
             actualChatClientDependencyException.Should()
                 .BeEquivalentTo(expectedChatClientDependencyException);
+
+            this.chatServiceMock.Verify(service =>
+                service.StartChatAsync(It.IsAny<ChatSessionConfig>(), It.IsAny<CancellationToken>()),
+                    Times.Once);
+
+            this.chatServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnStartChatIfServiceErrorOccurredAsync()
+        {
+            // given
+            ChatSessionConfig someChatSessionConfig = CreateRandomChatSessionConfig();
+            CancellationToken cancellationToken = CancellationToken.None;
+            var serviceException = new Exception();
+
+            var failedChatClientServiceException =
+                new FailedChatClientServiceException(
+                    message: "Failed chat client service error occurred, contact support.",
+                    innerException: serviceException,
+                    data: serviceException.Data);
+
+            var expectedChatClientServiceException =
+                new ChatClientServiceException(
+                    message: "Chat client dependency error occurred, contact support.",
+                    innerException: failedChatClientServiceException as Xeption,
+                    data: failedChatClientServiceException.Data);
+
+            this.chatServiceMock.Setup(service =>
+                service.StartChatAsync(It.IsAny<ChatSessionConfig>(), It.IsAny<CancellationToken>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Guid> startChatTask =
+                this.chatClient.StartChatAsync(someChatSessionConfig, cancellationToken);
+
+            ChatClientServiceException actualChatClientServiceException =
+                await Assert.ThrowsAsync<ChatClientServiceException>(
+                    startChatTask.AsTask);
+
+            // then
+            actualChatClientServiceException.Should()
+                .BeEquivalentTo(expectedChatClientServiceException);
 
             this.chatServiceMock.Verify(service =>
                 service.StartChatAsync(It.IsAny<ChatSessionConfig>(), It.IsAny<CancellationToken>()),

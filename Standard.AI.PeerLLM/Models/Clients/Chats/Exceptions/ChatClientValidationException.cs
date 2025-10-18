@@ -5,7 +5,7 @@
 using System.Collections;
 using Xeptions;
 
-namespace Standard.AI.PeerLLM.Models.Foundations.Chats.Exceptions
+namespace Standard.AI.PeerLLM.Models.Clients.Chats.Exceptions
 {
     public class ChatClientValidationException : Xeption
     {

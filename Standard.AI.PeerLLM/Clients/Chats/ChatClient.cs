@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Standard.AI.PeerLLM.Models.Clients.Chats.Exceptions;
 using Standard.AI.PeerLLM.Models.Foundations.Chats;
 using Standard.AI.PeerLLM.Models.Foundations.Chats.Exceptions;
 using Standard.AI.PeerLLM.Services.Foundations.Chats;
