@@ -9,6 +9,47 @@
 
 Standard.AI.PeerLLM — A Standardized .NET library for PeerLLM, enabling developers to integrate AI-powered solutions into their .NET applications.
 
+
+### Chats
+The following example demonstrate how you can write your first Completions program.
+
+#### Program.cs
+```csharp
+using System;
+using System.Threading.Tasks;
+using Standard.AI.PeerLLM.Models.Foundations.Chats;
+
+namespace ExamplePeerLLMDotNet
+{
+    internal class Program
+    {
+        static async Task Main(string[] args)
+        {
+            var peerLLMConfiguration = new PeerLLMConfiguration();
+            PeerLLMClient peerLLMClient = new PeerLLMClient(peerLLMConfiguration);
+
+            ChatSessionConfig chatSessionConfig = new ChatSessionConfig
+            {
+                ModelName = "mistral-7b-instruct-v0.1.Q8_0",
+            };
+
+            Guid conversationId = await this.peerLLMClient.V1.Chats.StartChatAsync(chatSessionConfig);
+            List<string> tokens = new List<string>();
+
+            IAsyncEnumerable<string> responseStream = this.peerLLMClient.V1.Chats.StreamChatAsync(
+                conversationId, text: "Hello, how are you?");
+
+            await foreach (string token in responseStream)
+            {
+                tokens.Add(token);
+            }
+
+            Console.WriteLine(string.Concat(tokens));
+        }
+    }
+}
+```
+
 ## Standard-Compliance
 This library was built according to The Standard. The library follows engineering principles, patterns and tooling as recommended by [The Standard](https://github.com/hassanhabib/The-Standard).
 
