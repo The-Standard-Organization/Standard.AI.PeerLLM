@@ -64,8 +64,13 @@ namespace Standard.AI.PeerLLM.Clients.Chats
         public IAsyncEnumerable<string> StreamChatAsync(
             Guid conversationId,
             string text,
-            CancellationToken cancellationToken = default) =>
-                throw new NotImplementedException();
+            CancellationToken cancellationToken = default)
+        {
+            return this.chatService.StreamChatAsync(
+                conversationId,
+                text,
+                cancellationToken);
+        }
 
         private static ChatClientValidationException CreateChatClientValidationException(
             Xeption innerException)
