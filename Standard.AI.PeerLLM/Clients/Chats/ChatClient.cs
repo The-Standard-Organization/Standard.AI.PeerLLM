@@ -79,6 +79,16 @@ namespace Standard.AI.PeerLLM.Clients.Chats
                 throw CreateChatClientValidationException(
                     chatDependencyValidationException.InnerException as Xeption);
             }
+            catch (ChatDependencyException chatDependencyException)
+            {
+                throw CreateChatClientDependencyException(
+                    chatDependencyException.InnerException as Xeption);
+            }
+            catch (ChatServiceException chatServiceException)
+            {
+                throw CreateChatClientDependencyException(
+                    chatServiceException.InnerException as Xeption);
+            }
         }
 
         public IAsyncEnumerable<string> StreamChatAsync(
