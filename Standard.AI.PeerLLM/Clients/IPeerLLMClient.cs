@@ -2,9 +2,9 @@
 // Copyright (c) The Standard Organization: A coalition of the Good-Hearted Engineers
 // ----------------------------------------------------------------------------------
 
-using Standard.AI.PeerLLM.Clients.Chats;
+using Standard.AI.PeerLLM.Clients.Versions;
 
-namespace Standard.AI.OpenAI.Clients.OpenAIs
+namespace Standard.AI.PeerLLM.Clients
 {
     public interface IPeerLLMClient
     {

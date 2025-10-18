@@ -2,7 +2,9 @@
 // Copyright (c) The Standard Organization: A coalition of the Good-Hearted Engineers
 // ----------------------------------------------------------------------------------
 
-namespace Standard.AI.PeerLLM.Clients.Chats
+using Standard.AI.PeerLLM.Clients.Chats;
+
+namespace Standard.AI.PeerLLM.Clients.Versions
 {
     /// <summary>
     /// Defines the contract for interacting with the PeerLLM V1 APIs.
@@ -19,6 +21,6 @@ namespace Standard.AI.PeerLLM.Clients.Chats
         /// </summary>
         /// <param name="chatClient">The chat client implementation used for chat interactions.</param>
         public V1Client(IChatClient chatClient) =>
-            this.Chats = chatClient;
+            Chats = chatClient;
     }
 }

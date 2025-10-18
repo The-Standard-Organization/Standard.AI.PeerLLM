@@ -6,10 +6,11 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Standard.AI.PeerLLM.Brokers.PeerLLMs;
 using Standard.AI.PeerLLM.Clients.Chats;
+using Standard.AI.PeerLLM.Clients.Versions;
 using Standard.AI.PeerLLM.Models.Configurations;
 using Standard.AI.PeerLLM.Services.Foundations.Chats;
 
-namespace Standard.AI.OpenAI.Clients.OpenAIs
+namespace Standard.AI.PeerLLM.Clients
 {
     public class PeerLLMClient : IPeerLLMClient
     {
