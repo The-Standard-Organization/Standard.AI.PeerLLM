@@ -65,7 +65,7 @@ namespace Standard.AI.PeerLLM.Clients.Chats
             Guid conversationId,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await this.chatService.EndChatAsync(conversationId, cancellationToken);
         }
 
         public IAsyncEnumerable<string> StreamChatAsync(
