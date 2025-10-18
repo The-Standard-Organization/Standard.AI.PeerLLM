@@ -8,7 +8,7 @@ using Xeptions;
 
 namespace Standard.AI.PeerLLM.Models.Clients.Chats.Exceptions
 {
-    internal class FailedChatClientServiceException : Xeption
+    public class FailedChatClientServiceException : Xeption
     {
         public FailedChatClientServiceException(string message, Exception innerException, IDictionary data)
             : base(message, innerException, data)

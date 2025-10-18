@@ -24,8 +24,8 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
             ChatSessionConfig someChatSessionConfig = CreateRandomChatSessionConfig();
             CancellationToken cancellationToken = CancellationToken.None;
 
-            var expectedChatClientDependencyException =
-                new ChatClientDependencyException(
+            var expectedChatClientValidationException =
+                new ChatClientValidationException(
                     message: "Chat client validation error occurred, fix errors and try again.",
                     innerException: validationException.InnerException as Xeption,
                     data: validationException.InnerException.Data);
@@ -38,13 +38,13 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
             ValueTask<Guid> startChatTask =
                 this.chatClient.StartChatAsync(someChatSessionConfig, cancellationToken);
 
-            ChatClientDependencyException actualChatClientDependencyException =
-                await Assert.ThrowsAsync<ChatClientDependencyException>(
+            ChatClientValidationException actualChatClientDependencyException =
+                await Assert.ThrowsAsync<ChatClientValidationException>(
                     startChatTask.AsTask);
 
             // then
             actualChatClientDependencyException.Should()
-                .BeEquivalentTo(expectedChatClientDependencyException);
+                .BeEquivalentTo(expectedChatClientValidationException);
 
             this.chatServiceMock.Verify(service =>
                 service.StartChatAsync(It.IsAny<ChatSessionConfig>(), It.IsAny<CancellationToken>()),
