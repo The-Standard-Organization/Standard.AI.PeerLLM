@@ -11,24 +11,24 @@ using Standard.AI.PeerLLM.Models.Foundations.Chats;
 
 namespace Standard.AI.PeerLLM.Services.Foundations.Chats
 {
-    internal partial class ChatService : IChatService
+    internal partial class ChatServiceV2 : IChatServiceV2
     {
         private readonly IPeerLLMBroker peerLLMBroker;
-        public string StartChatRelativeUrl { get; private set; } = "api/chats/start";
-        public string StreamChatRelativeUrl { get; private set; } = "/api/chats/stream";
-        public string EndChatRelativeUrl { get; private set; } = "/api/chats/end";
+        public string StartChatRelativeUrl { get; private set; } = "api/v2/chats/start";
+        public string StreamChatRelativeUrl { get; private set; } = "/api/v2/chats/stream";
+        public string EndChatRelativeUrl { get; private set; } = "/api/v2/chats/end";
 
-        public ChatService(IPeerLLMBroker peerLLMBroker) =>
+        public ChatServiceV2(IPeerLLMBroker peerLLMBroker) =>
             this.peerLLMBroker = peerLLMBroker;
 
         public ValueTask<Guid> StartChatAsync(
-            ChatSessionConfig chatSessionConfig,
+            ChatSessionConfigV2 chatSessionConfig,
             CancellationToken cancellationToken = default) =>
         TryCatch(async () =>
         {
             ValidateOnStartChat(chatSessionConfig);
 
-            return await this.peerLLMBroker.StartChatAsync(
+            return await this.peerLLMBroker.StartChatV2Async(
                 chatSessionConfig,
                 relativeUrl: StartChatRelativeUrl,
                 cancellationToken);

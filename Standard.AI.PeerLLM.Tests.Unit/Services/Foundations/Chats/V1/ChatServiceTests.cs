@@ -12,7 +12,7 @@ using Standard.AI.PeerLLM.Models.Foundations.Chats;
 using Standard.AI.PeerLLM.Services.Foundations.Chats;
 using Tynamix.ObjectFiller;
 
-namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
+namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats.V1
 {
     public partial class ChatServiceTests
     {

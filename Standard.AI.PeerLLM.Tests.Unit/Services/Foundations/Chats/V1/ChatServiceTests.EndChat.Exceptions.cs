@@ -10,12 +10,12 @@ using FluentAssertions;
 using Moq;
 using Standard.AI.PeerLLM.Models.Foundations.Chats.Exceptions;
 
-namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
+namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats.V1
 {
     public partial class ChatServiceTests
     {
         [Fact]
-        public async Task ShouldThrowDependencyValidationExceptionOnStreamChatIfBadRequestErrorOccurredAsync()
+        public async Task ShouldThrowDependencyValidationExceptionOnEndChatIfBadRequestErrorOccurredAsync()
         {
             // given
             Guid someConversationId = Guid.NewGuid();
@@ -40,30 +40,28 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                     innerException: hostNotFoundChatException);
 
             this.peerLLMBrokerMock.Setup(broker =>
-                broker.StreamChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                     .Throws(httpRequestException);
 
             // when
-            Task StreamChatTask() => EnumerateAsync(
-                source: this.chatService.StreamChatAsync(someConversationId, someText, cancellationToken),
-                cancellationToken);
+            ValueTask<string> endChatTask = this.chatService.EndChatAsync(someConversationId, cancellationToken);
 
             ChatDependencyValidationException actualChatDependencyValidationException =
-                await Assert.ThrowsAsync<ChatDependencyValidationException>(StreamChatTask);
+                await Assert.ThrowsAsync<ChatDependencyValidationException>(endChatTask.AsTask);
 
             // then
             actualChatDependencyValidationException.Should()
                 .BeEquivalentTo(expectedChatDependencyValidationException);
 
             this.peerLLMBrokerMock.Verify(broker =>
-                broker.StreamChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
                     Times.Once);
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async Task ShouldThrowDependencyValidationExceptionOnStreamChatIfNotFoundErrorOccurredAsync()
+        public async Task ShouldThrowDependencyValidationExceptionOnEndChatIfNotFoundErrorOccurredAsync()
         {
             // given
             Guid someConversationId = Guid.NewGuid();
@@ -88,30 +86,28 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                     innerException: conversationNotFoundChatException);
 
             this.peerLLMBrokerMock.Setup(broker =>
-                broker.StreamChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                     .Throws(httpRequestException);
 
             // when
-            Task StreamChatTask() => EnumerateAsync(
-                source: this.chatService.StreamChatAsync(someConversationId, someText, cancellationToken),
-                cancellationToken);
+            ValueTask<string> endChatTask = this.chatService.EndChatAsync(someConversationId, cancellationToken);
 
             ChatDependencyValidationException actualChatDependencyValidationException =
-                await Assert.ThrowsAsync<ChatDependencyValidationException>(StreamChatTask);
+                await Assert.ThrowsAsync<ChatDependencyValidationException>(endChatTask.AsTask);
 
             // then
             actualChatDependencyValidationException.Should()
                 .BeEquivalentTo(expectedChatDependencyValidationException);
 
             this.peerLLMBrokerMock.Verify(broker =>
-                broker.StreamChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
                     Times.Once);
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async Task ShouldThrowDependencyValidationExceptionOnStreamChatIfExternalErrorOccurredAsync()
+        public async Task ShouldThrowDependencyValidationExceptionOnEndChatIfExternalErrorOccurredAsync()
         {
             // given
             Guid someConversationId = Guid.NewGuid();
@@ -136,30 +132,28 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                     innerException: externalChatException);
 
             this.peerLLMBrokerMock.Setup(broker =>
-                broker.StreamChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                     .Throws(httpRequestException);
 
             // when
-            Task StreamChatTask() => EnumerateAsync(
-                source: this.chatService.StreamChatAsync(someConversationId, someText, cancellationToken),
-                cancellationToken);
+            ValueTask<string> endChatTask = this.chatService.EndChatAsync(someConversationId, cancellationToken);
 
             ChatDependencyValidationException actualChatDependencyValidationException =
-                await Assert.ThrowsAsync<ChatDependencyValidationException>(StreamChatTask);
+                await Assert.ThrowsAsync<ChatDependencyValidationException>(endChatTask.AsTask);
 
             // then
             actualChatDependencyValidationException.Should()
                 .BeEquivalentTo(expectedChatDependencyValidationException);
 
             this.peerLLMBrokerMock.Verify(broker =>
-                broker.StreamChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
                     Times.Once);
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnStreamChatIfErrorOccurredAsync()
+        public async Task ShouldThrowServiceExceptionOnEndChatIfErrorOccurredAsync()
         {
             // given
             Guid someConversationId = Guid.NewGuid();
@@ -179,23 +173,21 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                     innerException: failedChatServiceException);
 
             this.peerLLMBrokerMock.Setup(broker =>
-                broker.StreamChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                     .Throws(serviceException);
 
             // when
-            Task StreamChatTask() => EnumerateAsync(
-                source: this.chatService.StreamChatAsync(someConversationId, someText, cancellationToken),
-                cancellationToken);
+            ValueTask<string> endChatTask = this.chatService.EndChatAsync(someConversationId, cancellationToken);
 
             ChatServiceException actualChatServiceException =
-                await Assert.ThrowsAsync<ChatServiceException>(StreamChatTask);
+                await Assert.ThrowsAsync<ChatServiceException>(endChatTask.AsTask);
 
             // then
             actualChatServiceException.Should()
                 .BeEquivalentTo(expectedChatServiceException);
 
             this.peerLLMBrokerMock.Verify(broker =>
-                broker.StreamChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
                     Times.Once);
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();

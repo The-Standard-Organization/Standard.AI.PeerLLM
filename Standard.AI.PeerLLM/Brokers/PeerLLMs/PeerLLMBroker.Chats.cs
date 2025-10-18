@@ -14,10 +14,11 @@ namespace Standard.AI.PeerLLM.Brokers.PeerLLMs
     {
         public async ValueTask<Guid> StartChatAsync(
             ChatSessionConfig chatSessionConfig,
+            string relativeUrl,
             CancellationToken cancellationToken = default)
         {
             return await PostJsonAsync<ChatSessionConfig, Guid>(
-                relativeUrl: "chats/start",
+                relativeUrl,
                 content: chatSessionConfig,
                 cancellationToken);
         }
@@ -25,20 +26,22 @@ namespace Standard.AI.PeerLLM.Brokers.PeerLLMs
         public IAsyncEnumerable<string> StreamChatAsync(
             Guid conversationId,
             string text,
+            string relativeUrl,
             CancellationToken cancellationToken = default)
         {
             return PostJsonStreamAsync(
-                relativeUrl: "chats/stream",
+                relativeUrl,
                 content: new { ConversationId = conversationId, Text = text },
                 cancellationToken);
         }
 
         public async ValueTask<string> EndChatAsync(
             Guid conversationId,
+            string relativeUrl,
             CancellationToken cancellationToken = default)
         {
             dynamic response = await PostJsonAsync<Guid, dynamic>(
-                relativeUrl: "chats/end",
+                relativeUrl,
                 content: conversationId,
                 cancellationToken);
 

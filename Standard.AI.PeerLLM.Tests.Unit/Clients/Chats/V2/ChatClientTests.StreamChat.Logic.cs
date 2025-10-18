@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 
-namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
+namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats.V2
 {
     public partial class ChatClientTests
     {
@@ -28,7 +28,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
 
             // when
             IAsyncEnumerable<string> actualResponse =
-                this.chatClient.StreamChatAsync(inputConversationId, inputText, cancellationToken);
+                this.chatClientV2.StreamChatAsync(inputConversationId, inputText, cancellationToken);
 
             var actualList = await ToListAsync(actualResponse, cancellationToken);
 

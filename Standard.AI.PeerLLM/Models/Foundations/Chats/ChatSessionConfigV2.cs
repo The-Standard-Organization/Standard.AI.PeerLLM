@@ -12,7 +12,7 @@ namespace Standard.AI.PeerLLM.Models.Foundations.Chats
     /// This defines which model to use, the machines to target, the system role,
     /// and other initialization options such as anti-prompts and fallback behavior.
     /// </summary>
-    public class ChatSessionConfig
+    public class ChatSessionConfigV2
     {
         /// <summary>
         /// Gets or sets the name of the model to use for this chat session.
@@ -49,5 +49,13 @@ namespace Standard.AI.PeerLLM.Models.Foundations.Chats
         /// </summary>
         [JsonPropertyName("fallBack")]
         public bool FallBack { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a list of strings that the model should avoid producing
+        /// in its output (anti-prompts).
+        /// Example values: "User:", "System:", "Assistant:", "Note:".
+        /// </summary>
+        [JsonPropertyName("antiPrompts")]
+        public List<string>? AntiPrompts { get; set; }
     }
 }

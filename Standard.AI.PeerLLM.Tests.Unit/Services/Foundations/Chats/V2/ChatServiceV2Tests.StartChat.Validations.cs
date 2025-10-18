@@ -10,15 +10,16 @@ using Moq;
 using Standard.AI.PeerLLM.Models.Foundations.Chats;
 using Standard.AI.PeerLLM.Models.Foundations.Chats.Exceptions;
 
-namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
+namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats.V2
 {
-    public partial class ChatServiceTests
+    public partial class ChatServiceV2Tests
     {
         [Fact]
         public async Task ShouldThrowValidationExceptionOnStartChatIfChatSessionConfigIsNullAsync()
         {
             // given
-            ChatSessionConfig nullChatSessionConfig = null;
+            string relativeUrl = chatServiceV2.StartChatRelativeUrl;
+            ChatSessionConfigV2 nullChatSessionConfig = null;
             CancellationToken cancellationToken = CancellationToken.None;
 
             var nullChatSessionConfigException =
@@ -28,9 +29,10 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                 new ChatValidationException(
                     message: "Chat validation error occurred, fix errors and try again.",
                     innerException: nullChatSessionConfigException);
+
             // when
             ValueTask<Guid> startChatTask =
-                this.chatService.StartChatAsync(nullChatSessionConfig, cancellationToken);
+                this.chatServiceV2.StartChatAsync(nullChatSessionConfig, cancellationToken);
 
             ChatValidationException actualChatValidationException =
                 await Assert.ThrowsAsync<ChatValidationException>(
@@ -41,7 +43,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                 .BeEquivalentTo(expectedChatValidationException);
 
             this.peerLLMBrokerMock.Verify(broker =>
-                broker.StartChatAsync(nullChatSessionConfig, cancellationToken),
+                broker.StartChatV2Async(nullChatSessionConfig, relativeUrl, cancellationToken),
                     Times.Never);
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();
@@ -54,7 +56,9 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
         public async Task ShouldThrowValidationExceptionOnStartChatIfModelIsInvalidAsync(string invalidText)
         {
             // given
-            ChatSessionConfig invalidChatSessionConfig = new ChatSessionConfig
+            string relativeUrl = chatServiceV2.StartChatRelativeUrl;
+
+            ChatSessionConfigV2 invalidChatSessionConfig = new ChatSessionConfigV2
             {
                 ModelName = invalidText,
             };
@@ -75,7 +79,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                     innerException: invalidChatSessionConfigException);
 
             // when
-            ValueTask<Guid> startChatTask = this.chatService.StartChatAsync(invalidChatSessionConfig);
+            ValueTask<Guid> startChatTask = this.chatServiceV2.StartChatAsync(invalidChatSessionConfig);
 
             ChatValidationException actualChatValidationException =
                 await Assert.ThrowsAsync<ChatValidationException>(
@@ -86,7 +90,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
                 .BeEquivalentTo(expectedChatValidationException);
 
             this.peerLLMBrokerMock.Verify(broker =>
-                broker.StartChatAsync(invalidChatSessionConfig, cancellationToken),
+                broker.StartChatV2Async(invalidChatSessionConfig, relativeUrl, cancellationToken),
                     Times.Never);
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();
