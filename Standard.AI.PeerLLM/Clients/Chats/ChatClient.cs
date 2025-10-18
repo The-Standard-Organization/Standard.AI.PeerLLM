@@ -93,6 +93,16 @@ namespace Standard.AI.PeerLLM.Clients.Chats
                 throw CreateChatClientDependencyException(
                     chatServiceException.InnerException as Xeption);
             }
+            catch (Exception exception)
+            {
+                var failedChatClientServiceException =
+                    new FailedChatClientServiceException(
+                        message: "Failed chat client service error occurred, contact support.",
+                        innerException: exception,
+                        data: exception.Data);
+
+                throw CreateChatClientServiceException(failedChatClientServiceException);
+            }
         }
 
         private static ChatClientValidationException CreateChatClientValidationException(
