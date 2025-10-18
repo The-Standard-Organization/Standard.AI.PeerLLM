@@ -73,8 +73,16 @@ namespace Standard.AI.PeerLLM.Infrastructure.Services
 
                                 new TestTask
                                 {
-                                    Name = "Test",
+                                    Name = "Run Unit Tests",
+                                    Shell = "pwsh",
+                                    Run = "dotnet test **/*Tests.Unit.csproj --no-build --verbosity normal"
                                 },
+
+                                new TestTask
+                                {
+                                    Name = "Run Acceptance Tests",
+                                    Run = "dotnet test **/*Tests.Acceptance.csproj --no-build --verbosity normal"
+                                }
                             }
                         }
                     },
