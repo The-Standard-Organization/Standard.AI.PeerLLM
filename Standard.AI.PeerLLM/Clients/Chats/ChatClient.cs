@@ -65,7 +65,20 @@ namespace Standard.AI.PeerLLM.Clients.Chats
             Guid conversationId,
             CancellationToken cancellationToken = default)
         {
-            return await this.chatService.EndChatAsync(conversationId, cancellationToken);
+            try
+            {
+                return await this.chatService.EndChatAsync(conversationId, cancellationToken);
+            }
+            catch (ChatValidationException chatValidationException)
+            {
+                throw CreateChatClientValidationException(
+                    chatValidationException.InnerException as Xeption);
+            }
+            catch (ChatDependencyValidationException chatDependencyValidationException)
+            {
+                throw CreateChatClientValidationException(
+                    chatDependencyValidationException.InnerException as Xeption);
+            }
         }
 
         public IAsyncEnumerable<string> StreamChatAsync(
