@@ -36,11 +36,29 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
             return new TheoryData<Xeption>
             {
                 new ChatValidationException(
-                    message: "Chat validation error occured, fix errors and try again",
+                    message: "Chat validation error occured, fix errors and try again.",
                     innerException: someException),
 
                 new ChatDependencyValidationException(
-                    message: "Chat dependency validation error occurred, fix errors and try again",
+                    message: "Chat dependency validation error occurred, fix errors and try again.",
+                    innerException: someException)
+            };
+        }
+
+        public static TheoryData<Xeption> DependencyExceptions()
+        {
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+            var someException = new Xeption(exceptionMessage);
+
+            return new TheoryData<Xeption>
+            {
+                new ChatDependencyException(
+                    message: "Chat validation error occured, contact support.",
+                    innerException: someException),
+
+                new ChatServiceException(
+                    message: "Chat service error occurred, contact support.",
                     innerException: someException)
             };
         }
