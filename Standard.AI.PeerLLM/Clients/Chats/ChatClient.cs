@@ -61,6 +61,13 @@ namespace Standard.AI.PeerLLM.Clients.Chats
             }
         }
 
+        public async ValueTask<string> EndChatAsync(
+            Guid conversationId,
+            CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         public IAsyncEnumerable<string> StreamChatAsync(
             Guid conversationId,
             string text,
