@@ -54,7 +54,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
             return new TheoryData<Xeption>
             {
                 new ChatDependencyException(
-                    message: "Chat validation error occured, contact support.",
+                    message: "Chat dependency error occured, contact support.",
                     innerException: someException),
 
                 new ChatServiceException(
