@@ -26,8 +26,23 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Run Unit Tests
+      run: >-
+        $projects = Get-ChildItem -Path . -Filter "*Tests.Unit*.csproj" -Recurse
+
+        foreach ($project in $projects) {
+          Write-Host "Running tests for: $($project.FullName)"
+          dotnet test $project.FullName --no-build --verbosity normal
+        }
+      shell: pwsh
+    - name: Run Acceptance Tests
+      run: >-
+        $projects = Get-ChildItem -Path . -Filter "*Tests.Acceptance*.csproj" -Recurse
+
+        foreach ($project in $projects) {
+          Write-Host "Running tests for: $($project.FullName)"
+          dotnet test $project.FullName --no-build --verbosity normal
+        }
   add_tag:
     name: Tag and Release
     runs-on: ubuntu-latest
