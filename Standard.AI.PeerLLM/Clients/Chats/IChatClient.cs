@@ -68,5 +68,28 @@ namespace Standard.AI.PeerLLM.Clients.Chats
             Guid conversationId,
             string text,
             CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Ends an active chat session with PeerLLM.
+        /// </summary>
+        /// <param name="conversationId">
+        /// The identifier of the conversation to end.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A token that can be used to cancel the asynchronous operation.
+        /// </param>
+        /// <returns>
+        /// A status message (<see cref="string"/>) returned by PeerLLM
+        /// confirming that the conversation was ended successfully.
+        /// </returns>
+        /// <remarks>
+        /// This method corresponds to the <c>POST /chats/end</c> endpoint.
+        /// </remarks>
+        /// <exception cref="ChatClientValidationException" />
+        /// <exception cref="ChatClientDependencyException" />
+        /// <exception cref="ChatClientServiceException" />
+        ValueTask<string> EndChatAsync(
+            Guid conversationId,
+            CancellationToken cancellationToken = default);
     }
 }

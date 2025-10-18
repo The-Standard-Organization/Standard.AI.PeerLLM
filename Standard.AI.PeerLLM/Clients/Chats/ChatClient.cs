@@ -61,6 +61,46 @@ namespace Standard.AI.PeerLLM.Clients.Chats
             }
         }
 
+        public async ValueTask<string> EndChatAsync(
+            Guid conversationId,
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await this.chatService.EndChatAsync(conversationId, cancellationToken);
+            }
+            catch (ChatValidationException chatValidationException)
+            {
+                throw CreateChatClientValidationException(
+                    chatValidationException.InnerException as Xeption);
+            }
+            catch (ChatDependencyValidationException chatDependencyValidationException)
+            {
+                throw CreateChatClientValidationException(
+                    chatDependencyValidationException.InnerException as Xeption);
+            }
+            catch (ChatDependencyException chatDependencyException)
+            {
+                throw CreateChatClientDependencyException(
+                    chatDependencyException.InnerException as Xeption);
+            }
+            catch (ChatServiceException chatServiceException)
+            {
+                throw CreateChatClientDependencyException(
+                    chatServiceException.InnerException as Xeption);
+            }
+            catch (Exception exception)
+            {
+                var failedChatClientServiceException =
+                    new FailedChatClientServiceException(
+                        message: "Failed chat client service error occurred, contact support.",
+                        innerException: exception,
+                        data: exception.Data);
+
+                throw CreateChatClientServiceException(failedChatClientServiceException);
+            }
+        }
+
         public IAsyncEnumerable<string> StreamChatAsync(
             Guid conversationId,
             string text,
