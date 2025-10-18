@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standard.AI.PeerLLM.Models.Clients.Chats.Exceptions;
-using Standard.AI.PeerLLM.Models.Foundations.Chats;
 using Xeptions;
 
 namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
@@ -60,7 +59,8 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
             Xeption dependencyException)
         {
             // given
-            ChatSessionConfig someChatSessionConfig = CreateRandomChatSessionConfig();
+            Guid someConversationId = Guid.NewGuid();
+            string someText = GetRandomString();
             CancellationToken cancellationToken = CancellationToken.None;
 
             var expectedChatClientDependencyException =
@@ -74,12 +74,12 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
                     .Throws(dependencyException);
 
             // when
-            ValueTask<Guid> startChatTask =
-                this.chatClient.StartChatAsync(someChatSessionConfig, cancellationToken);
+            Task StreamChatTask() => EnumerateAsync(
+                source: this.chatClient.StreamChatAsync(someConversationId, someText, cancellationToken),
+                cancellationToken);
 
             ChatClientDependencyException actualChatClientDependencyException =
-                await Assert.ThrowsAsync<ChatClientDependencyException>(
-                    startChatTask.AsTask);
+                await Assert.ThrowsAsync<ChatClientDependencyException>(StreamChatTask);
 
             // then
             actualChatClientDependencyException.Should()
