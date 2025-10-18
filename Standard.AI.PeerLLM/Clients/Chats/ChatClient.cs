@@ -18,19 +18,19 @@ namespace Standard.AI.PeerLLM.Clients.Chats
         public ChatClient(IChatService chatService) =>
             this.chatService = chatService;
 
-        public ValueTask<string> EndChatAsync(
-            Guid conversationId,
-            CancellationToken cancellationToken = default) =>
-                throw new NotImplementedException();
-
         public ValueTask<Guid> StartChatAsync(
             ChatSessionConfig chatSessionConfig,
             CancellationToken cancellationToken = default) =>
-                throw new NotImplementedException();
+                this.chatService.StartChatAsync(chatSessionConfig, cancellationToken);
 
         public IAsyncEnumerable<string> StreamChatAsync(
             Guid conversationId,
             string text,
+            CancellationToken cancellationToken = default) =>
+                throw new NotImplementedException();
+
+        public ValueTask<string> EndChatAsync(
+            Guid conversationId,
             CancellationToken cancellationToken = default) =>
                 throw new NotImplementedException();
     }
