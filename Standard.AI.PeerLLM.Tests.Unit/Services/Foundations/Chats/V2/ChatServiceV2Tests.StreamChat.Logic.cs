@@ -9,26 +9,27 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 
-namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
+namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats.V2
 {
-    public partial class ChatServiceTests
+    public partial class ChatServiceV2Tests
     {
         [Fact]
         public async Task ShouldStreamChatAsync()
         {
             // given
+            string relativeUrl = chatServiceV2.StreamChatRelativeUrl;
             Guid inputConversationId = Guid.NewGuid();
             string inputText = GetRandomString();
             CancellationToken cancellationToken = CancellationToken.None;
             var expectedItems = await ToListAsync(GetAsyncEnumerableOfRandomStrings(), cancellationToken);
 
             this.peerLLMBrokerMock.Setup(broker =>
-                broker.StreamChatAsync(inputConversationId, inputText, cancellationToken))
+                broker.StreamChatAsync(inputConversationId, inputText, relativeUrl, cancellationToken))
                     .Returns(ToAsyncStream(expectedItems));
 
             // when
             IAsyncEnumerable<string> actualResponse =
-                this.chatService.StreamChatAsync(inputConversationId, inputText, cancellationToken);
+                this.chatServiceV2.StreamChatAsync(inputConversationId, inputText, cancellationToken);
 
             var actualList = await ToListAsync(actualResponse, cancellationToken);
 
@@ -36,7 +37,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
             actualList.Should().Equal(expectedItems);
 
             this.peerLLMBrokerMock.Verify(broker =>
-                broker.StreamChatAsync(inputConversationId, inputText, cancellationToken),
+                broker.StreamChatAsync(inputConversationId, inputText, relativeUrl, cancellationToken),
                     Times.Once);
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();

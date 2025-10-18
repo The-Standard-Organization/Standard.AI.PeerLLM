@@ -12,6 +12,10 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
 {
     internal interface IChatService
     {
+        string StartChatRelativeUrl { get; }
+        string StreamChatRelativeUrl { get; }
+        string EndChatRelativeUrl { get; }
+
         ValueTask<Guid> StartChatAsync(
             ChatSessionConfig chatSessionConfig,
             CancellationToken cancellationToken = default);

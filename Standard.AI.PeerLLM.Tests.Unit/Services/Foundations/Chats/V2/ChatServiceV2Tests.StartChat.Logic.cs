@@ -9,35 +9,36 @@ using FluentAssertions;
 using Moq;
 using Standard.AI.PeerLLM.Models.Foundations.Chats;
 
-namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
+namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats.V2
 {
-    public partial class ChatClientTests
+    public partial class ChatServiceV2Tests
     {
         [Fact]
         public async Task ShouldStartChatAsync()
         {
             // given
-            ChatSessionConfig chatSessionConfig = CreateRandomChatSessionConfig();
+            string relativeUrl = chatServiceV2.StartChatRelativeUrl;
+            ChatSessionConfigV2 chatSessionConfig = CreateRandomChatSessionConfig();
             CancellationToken cancellationToken = CancellationToken.None;
             Guid expectedConversationId = Guid.NewGuid();
 
-            this.chatServiceMock.Setup(service =>
-                service.StartChatAsync(chatSessionConfig, cancellationToken))
+            this.peerLLMBrokerMock.Setup(broker =>
+                broker.StartChatV2Async(chatSessionConfig, relativeUrl, cancellationToken))
                     .ReturnsAsync(expectedConversationId);
 
             // when
             Guid actualConversationId =
-                await this.chatClient.StartChatAsync(
+                await this.chatServiceV2.StartChatAsync(
                     chatSessionConfig);
 
             // then
             actualConversationId.Should().Be(expectedConversationId);
 
-            this.chatServiceMock.Verify(service =>
-                service.StartChatAsync(chatSessionConfig, cancellationToken),
+            this.peerLLMBrokerMock.Verify(broker =>
+                broker.StartChatV2Async(chatSessionConfig, relativeUrl, cancellationToken),
                     Times.Once);
 
-            this.chatServiceMock.VerifyNoOtherCalls();
+            this.peerLLMBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

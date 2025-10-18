@@ -9,7 +9,7 @@ using FluentAssertions;
 using Moq;
 using Standard.AI.PeerLLM.Models.Foundations.Chats;
 
-namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
+namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats.V1
 {
     public partial class ChatServiceTests
     {
@@ -17,12 +17,13 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
         public async Task ShouldStartChatAsync()
         {
             // given
+            string relativeUrl = chatService.StartChatRelativeUrl;
             ChatSessionConfig chatSessionConfig = CreateRandomChatSessionConfig();
             CancellationToken cancellationToken = CancellationToken.None;
             Guid expectedConversationId = Guid.NewGuid();
 
             this.peerLLMBrokerMock.Setup(broker =>
-                broker.StartChatAsync(chatSessionConfig, cancellationToken))
+                broker.StartChatAsync(chatSessionConfig, relativeUrl, cancellationToken))
                     .ReturnsAsync(expectedConversationId);
 
             // when
@@ -34,7 +35,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats
             actualConversationId.Should().Be(expectedConversationId);
 
             this.peerLLMBrokerMock.Verify(broker =>
-                broker.StartChatAsync(chatSessionConfig, cancellationToken),
+                broker.StartChatAsync(chatSessionConfig, relativeUrl, cancellationToken),
                     Times.Once);
 
             this.peerLLMBrokerMock.VerifyNoOtherCalls();

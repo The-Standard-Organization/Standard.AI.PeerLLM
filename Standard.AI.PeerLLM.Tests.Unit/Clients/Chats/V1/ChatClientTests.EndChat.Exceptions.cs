@@ -10,7 +10,7 @@ using Moq;
 using Standard.AI.PeerLLM.Models.Clients.Chats.Exceptions;
 using Xeptions;
 
-namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
+namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats.V1
 {
     public partial class ChatClientTests
     {

@@ -10,7 +10,7 @@ using Moq;
 using Standard.AI.PeerLLM.Models.Clients.Chats.Exceptions;
 using Xeptions;
 
-namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
+namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats.V2
 {
     public partial class ChatClientTests
     {
@@ -36,7 +36,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
 
             // when
             Task StreamChatTask() => EnumerateAsync(
-                source: this.chatClient.StreamChatAsync(someConversationId, someText, cancellationToken),
+                source: this.chatClientV2.StreamChatAsync(someConversationId, someText, cancellationToken),
                 cancellationToken);
 
             ChatClientValidationException actualChatClientDependencyException =
@@ -75,7 +75,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
 
             // when
             Task StreamChatTask() => EnumerateAsync(
-                source: this.chatClient.StreamChatAsync(someConversationId, someText, cancellationToken),
+                source: this.chatClientV2.StreamChatAsync(someConversationId, someText, cancellationToken),
                 cancellationToken);
 
             ChatClientDependencyException actualChatClientDependencyException =
@@ -119,7 +119,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
 
             // when
             Task StreamChatTask() => EnumerateAsync(
-                source: this.chatClient.StreamChatAsync(someConversationId, someText, cancellationToken),
+                source: this.chatClientV2.StreamChatAsync(someConversationId, someText, cancellationToken),
                 cancellationToken);
 
             ChatClientServiceException actualChatClientServiceException =

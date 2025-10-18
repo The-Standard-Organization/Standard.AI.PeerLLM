@@ -8,24 +8,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using Standard.AI.PeerLLM.Models.Foundations.Chats;
 
-namespace Standard.AI.PeerLLM.Brokers.PeerLLMs
+namespace Standard.AI.PeerLLM.Services.Foundations.Chats
 {
-    internal partial interface IPeerLLMBroker
+    internal interface IChatServiceV2
     {
+        string StartChatRelativeUrl { get; }
+        string StreamChatRelativeUrl { get; }
+        string EndChatRelativeUrl { get; }
+
         ValueTask<Guid> StartChatAsync(
-            ChatSessionConfig chatSessionConfig,
-            string relativeUrl,
+            ChatSessionConfigV2 chatSessionConfig,
             CancellationToken cancellationToken = default);
 
         IAsyncEnumerable<string> StreamChatAsync(
             Guid conversationId,
             string text,
-            string relativeUrl,
             CancellationToken cancellationToken = default);
 
         ValueTask<string> EndChatAsync(
             Guid conversationId,
-            string relativeUrl,
             CancellationToken cancellationToken = default);
     }
 }

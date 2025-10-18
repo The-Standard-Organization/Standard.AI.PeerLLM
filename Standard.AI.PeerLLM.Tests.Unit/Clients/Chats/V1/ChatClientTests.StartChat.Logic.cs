@@ -7,34 +7,34 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using Standard.AI.PeerLLM.Models.Foundations.Chats;
 
-namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
+namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats.V1
 {
     public partial class ChatClientTests
     {
         [Fact]
-        public async Task ShouldEndChatAsync()
+        public async Task ShouldStartChatAsync()
         {
             // given
-            Guid inputConversationId = Guid.NewGuid();
+            ChatSessionConfig chatSessionConfig = CreateRandomChatSessionConfig();
             CancellationToken cancellationToken = CancellationToken.None;
-            string outputText = GetRandomString();
-            string expectedText = outputText;
+            Guid expectedConversationId = Guid.NewGuid();
 
             this.chatServiceMock.Setup(service =>
-                service.EndChatAsync(inputConversationId, cancellationToken))
-                    .ReturnsAsync(outputText);
+                service.StartChatAsync(chatSessionConfig, cancellationToken))
+                    .ReturnsAsync(expectedConversationId);
 
             // when
-            string actualText =
-                await this.chatClient.EndChatAsync(
-                    inputConversationId);
+            Guid actualConversationId =
+                await this.chatClient.StartChatAsync(
+                    chatSessionConfig);
 
             // then
-            actualText.Should().Be(expectedText);
+            actualConversationId.Should().Be(expectedConversationId);
 
             this.chatServiceMock.Verify(service =>
-                service.EndChatAsync(inputConversationId, cancellationToken),
+                service.StartChatAsync(chatSessionConfig, cancellationToken),
                     Times.Once);
 
             this.chatServiceMock.VerifyNoOtherCalls();
