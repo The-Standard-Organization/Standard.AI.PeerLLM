@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Standard.AI.OpenAI.Clients.OpenAIs;
+using Standard.AI.PeerLLM.Clients;
 using Standard.AI.PeerLLM.Models.Configurations;
 using Tynamix.ObjectFiller;
 using WireMock.Server;
