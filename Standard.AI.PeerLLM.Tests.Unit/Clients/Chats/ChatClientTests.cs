@@ -120,5 +120,13 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
                 await Task.Yield();
             }
         }
+
+        private static async Task EnumerateAsync<T>(
+            IAsyncEnumerable<T> source,
+            CancellationToken cancellationToken = default)
+        {
+            await foreach (var _ in source.WithCancellation(cancellationToken))
+            { }
+        }
     }
 }

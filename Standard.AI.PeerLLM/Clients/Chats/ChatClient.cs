@@ -66,10 +66,23 @@ namespace Standard.AI.PeerLLM.Clients.Chats
             string text,
             CancellationToken cancellationToken = default)
         {
-            return this.chatService.StreamChatAsync(
-                conversationId,
-                text,
-                cancellationToken);
+            try
+            {
+                return this.chatService.StreamChatAsync(
+                    conversationId,
+                    text,
+                    cancellationToken);
+            }
+            catch (ChatValidationException chatValidationException)
+            {
+                throw CreateChatClientValidationException(
+                    chatValidationException.InnerException as Xeption);
+            }
+            catch (ChatDependencyValidationException chatDependencyValidationException)
+            {
+                throw CreateChatClientValidationException(
+                    chatDependencyValidationException.InnerException as Xeption);
+            }
         }
 
         private static ChatClientValidationException CreateChatClientValidationException(
