@@ -15,8 +15,8 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
     {
         private readonly IPeerLLMBroker peerLLMBroker;
         public string StartChatRelativeUrl { get; private set; } = "api/chats/start";
-        public string StreamChatRelativeUrl { get; private set; } = "/api/chats/stream";
-        public string EndChatRelativeUrl { get; private set; } = "/api/chats/end";
+        public string StreamChatRelativeUrl { get; private set; } = "api/chats/stream";
+        public string EndChatRelativeUrl { get; private set; } = "api/chats/end";
 
         public ChatService(IPeerLLMBroker peerLLMBroker) =>
             this.peerLLMBroker = peerLLMBroker;

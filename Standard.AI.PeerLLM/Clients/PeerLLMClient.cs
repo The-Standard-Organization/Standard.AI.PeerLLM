@@ -36,6 +36,8 @@ namespace Standard.AI.OpenAI.Clients.OpenAIs
                 .AddTransient<IChatServiceV2, ChatServiceV2>()
                 .AddTransient<IChatClient, ChatClient>()
                 .AddTransient<IChatClientV2, ChatClientV2>()
+                .AddTransient<IV1Client, V1Client>()
+                .AddTransient<IV2Client, V2Client>()
                 .AddSingleton(peerLLMConfiguration);
 
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
