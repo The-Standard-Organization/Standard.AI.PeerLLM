@@ -10,7 +10,7 @@ using Standard.AI.PeerLLM.Models.Foundations.Chats;
 
 namespace Standard.AI.PeerLLM.Tests.Integration.Clients.V2.Chats
 {
-    public partial class ChatClientV1Tests
+    public partial class ChatClientV2Tests
     {
         [Fact]
         public async Task ShouldStartStreamAndEndAsync()
