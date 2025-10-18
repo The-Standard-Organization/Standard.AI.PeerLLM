@@ -104,8 +104,10 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
             CancellationToken cancellationToken = default)
         {
             var list = new List<string>();
+            
             await foreach (var item in source.WithCancellation(cancellationToken))
                 list.Add(item);
+
             return list;
         }
 
