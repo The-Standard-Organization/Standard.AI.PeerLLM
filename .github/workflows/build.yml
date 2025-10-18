@@ -26,8 +26,11 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Run Unit Tests
+      run: dotnet test **/*Tests.Unit.csproj --no-build --verbosity normal
+      shell: pwsh
+    - name: Run Acceptance Tests
+      run: dotnet test **/*Tests.Acceptance.csproj --no-build --verbosity normal
   add_tag:
     name: Tag and Release
     runs-on: ubuntu-latest
