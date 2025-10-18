@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Standard.AI.PeerLLM.Models.Clients.Chats.Exceptions;
@@ -59,6 +60,12 @@ namespace Standard.AI.PeerLLM.Clients.Chats
                 throw CreateChatClientServiceException(failedChatClientServiceException);
             }
         }
+
+        public IAsyncEnumerable<string> StreamChatAsync(
+            Guid conversationId,
+            string text,
+            CancellationToken cancellationToken = default) =>
+                throw new NotImplementedException();
 
         private static ChatClientValidationException CreateChatClientValidationException(
             Xeption innerException)
