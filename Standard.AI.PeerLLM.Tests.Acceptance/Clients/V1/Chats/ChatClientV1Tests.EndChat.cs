@@ -6,45 +6,40 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Standard.AI.PeerLLM.Models.Foundations.Chats;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 
 namespace Standard.AI.PeerLLM.Tests.Acceptance.Clients.V1.Chats
 {
-    public partial class ChatClientTests : IDisposable
+    public partial class ChatClientV1Tests : IDisposable
     {
         [Fact]
-        public async Task ShouldStartChat()
+        public async Task ShouldEndChat()
         {
             // given
-            ChatSessionConfig chatSessionConfig = new ChatSessionConfig
-            {
-                ModelName = GetRandomString(),
-            };
-
             Guid conversationId = Guid.NewGuid();
-            Guid expectedConversationId = conversationId;
-            var expectedBody = JsonSerializer.Serialize(chatSessionConfig);
+            string expectedResponse = "Conversation ended successfully";
+            string expectedBody = JsonSerializer.Serialize(conversationId);
 
             this.wireMockServer.Given(
                 Request.Create()
                 .UsingPost()
-                    .WithPath("/api/chats/start")
+                    .WithPath("/api/chats/end")
                     .WithHeader("Authorization", $"Bearer {this.apiKey}")
                     .WithHeader("Content-Type", "application/json; charset=utf-8")
-                    .WithBody(expectedBody))
+                    .WithBody(expectedBody)
+                    )
                 .RespondWith(
                     Response.Create()
                     .WithStatusCode(200)
-                    .WithBodyAsJson(conversationId));
+                    .WithBodyAsJson(new { message = expectedResponse }));
 
             // when
-            Guid actualConversationId =
-                await this.peerLLMClient.V1.Chats.StartChatAsync(chatSessionConfig);
+            string actualResponse =
+                await this.peerLLMClient.V1.Chats.EndChatAsync(conversationId);
 
             // then
-            actualConversationId.Should().Be(expectedConversationId);
+            actualResponse.Should().BeEquivalentTo(expectedResponse);
         }
     }
 }

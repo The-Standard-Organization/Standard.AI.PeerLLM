@@ -14,13 +14,13 @@ using WireMock.Server;
 
 namespace Standard.AI.PeerLLM.Tests.Acceptance.Clients.V1.Chats
 {
-    public partial class ChatClientTests : IDisposable
+    public partial class ChatClientV1Tests : IDisposable
     {
         private readonly string apiKey;
         private readonly WireMockServer wireMockServer;
         private readonly IPeerLLMClient peerLLMClient;
 
-        public ChatClientTests()
+        public ChatClientV1Tests()
         {
             this.apiKey = GetRandomString();
             this.wireMockServer = WireMockServer.Start();

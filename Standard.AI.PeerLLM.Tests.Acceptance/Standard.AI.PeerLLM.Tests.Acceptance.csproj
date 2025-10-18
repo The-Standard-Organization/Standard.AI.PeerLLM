@@ -40,8 +40,4 @@
 		<Using Include="Xunit" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Clients\V2\Chats\" />
-	</ItemGroup>
-
 </Project>

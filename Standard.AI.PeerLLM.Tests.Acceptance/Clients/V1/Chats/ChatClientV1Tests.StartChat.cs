@@ -3,49 +3,48 @@
 // ----------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Standard.AI.PeerLLM.Models.Foundations.Chats;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 
 namespace Standard.AI.PeerLLM.Tests.Acceptance.Clients.V1.Chats
 {
-    public partial class ChatClientTests : IDisposable
+    public partial class ChatClientV1Tests : IDisposable
     {
         [Fact]
-        public async Task ShouldStreamChat()
+        public async Task ShouldStartChat()
         {
             // given
+            ChatSessionConfig chatSessionConfig = new ChatSessionConfig
+            {
+                ModelName = GetRandomString(),
+            };
+
             Guid conversationId = Guid.NewGuid();
-            string text = GetRandomString();
             Guid expectedConversationId = conversationId;
-            var expectedBody = JsonSerializer.Serialize(new { ConversationId = conversationId, Text = text });
-            CancellationToken cancellationToken = CancellationToken.None;
-            var expectedList = await ToListAsync(GetAsyncEnumerableOfRandomStrings(), cancellationToken);
+            var expectedBody = JsonSerializer.Serialize(chatSessionConfig);
 
             this.wireMockServer.Given(
                 Request.Create()
                 .UsingPost()
-                    .WithPath("/api/chats/stream")
+                    .WithPath("/api/chats/start")
                     .WithHeader("Authorization", $"Bearer {this.apiKey}")
                     .WithHeader("Content-Type", "application/json; charset=utf-8")
                     .WithBody(expectedBody))
                 .RespondWith(
                     Response.Create()
                     .WithStatusCode(200)
-                    .WithBodyAsJson(expectedList));
+                    .WithBodyAsJson(conversationId));
 
             // when
-            IAsyncEnumerable<string> actualResponse =
-                this.peerLLMClient.V1.Chats.StreamChatAsync(conversationId, text);
-
-            var actualList = await ToListAsync(actualResponse, cancellationToken);
+            Guid actualConversationId =
+                await this.peerLLMClient.V1.Chats.StartChatAsync(chatSessionConfig);
 
             // then
-            actualList.Should().Equal(expectedList);
+            actualConversationId.Should().Be(expectedConversationId);
         }
     }
 }

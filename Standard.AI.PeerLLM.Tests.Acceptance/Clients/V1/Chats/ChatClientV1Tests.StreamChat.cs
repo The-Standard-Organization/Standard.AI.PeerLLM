@@ -3,7 +3,9 @@
 // ----------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using WireMock.RequestBuilders;
@@ -11,35 +13,39 @@ using WireMock.ResponseBuilders;
 
 namespace Standard.AI.PeerLLM.Tests.Acceptance.Clients.V1.Chats
 {
-    public partial class ChatClientTests : IDisposable
+    public partial class ChatClientV1Tests : IDisposable
     {
         [Fact]
-        public async Task ShouldEndChat()
+        public async Task ShouldStreamChat()
         {
             // given
             Guid conversationId = Guid.NewGuid();
-            string expectedResponse = "Conversation ended successfully";
-            string expectedBody = JsonSerializer.Serialize(conversationId);
+            string text = GetRandomString();
+            Guid expectedConversationId = conversationId;
+            var expectedBody = JsonSerializer.Serialize(new { ConversationId = conversationId, Text = text });
+            CancellationToken cancellationToken = CancellationToken.None;
+            var expectedList = await ToListAsync(GetAsyncEnumerableOfRandomStrings(), cancellationToken);
 
             this.wireMockServer.Given(
                 Request.Create()
                 .UsingPost()
-                    .WithPath("/api/chats/end")
+                    .WithPath("/api/chats/stream")
                     .WithHeader("Authorization", $"Bearer {this.apiKey}")
                     .WithHeader("Content-Type", "application/json; charset=utf-8")
-                    .WithBody(expectedBody)
-                    )
+                    .WithBody(expectedBody))
                 .RespondWith(
                     Response.Create()
                     .WithStatusCode(200)
-                    .WithBodyAsJson(new { message = expectedResponse }));
+                    .WithBodyAsJson(expectedList));
 
             // when
-            string actualResponse =
-                await this.peerLLMClient.V1.Chats.EndChatAsync(conversationId);
+            IAsyncEnumerable<string> actualResponse =
+                this.peerLLMClient.V1.Chats.StreamChatAsync(conversationId, text);
+
+            var actualList = await ToListAsync(actualResponse, cancellationToken);
 
             // then
-            actualResponse.Should().BeEquivalentTo(expectedResponse);
+            actualList.Should().Equal(expectedList);
         }
     }
 }
