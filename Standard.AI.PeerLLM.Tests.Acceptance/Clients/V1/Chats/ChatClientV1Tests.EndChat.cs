@@ -14,7 +14,7 @@ namespace Standard.AI.PeerLLM.Tests.Acceptance.Clients.V1.Chats
     public partial class ChatClientV1Tests : IDisposable
     {
         [Fact]
-        public async Task ShouldEndChat()
+        public async Task ShouldEndChatAsync()
         {
             // given
             Guid conversationId = Guid.NewGuid();
