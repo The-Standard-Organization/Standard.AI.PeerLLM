@@ -27,8 +27,8 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
             var expectedChatClientValidationException =
                 new ChatClientValidationException(
                     message: "Chat client validation error occurred, fix errors and try again.",
-                    innerException: validationException,
-                    data: validationException.Data);
+                    innerException: validationException.InnerException as Xeption,
+                    data: validationException.InnerException.Data);
 
             this.chatServiceMock.Setup(service =>
                 service.StartChatAsync(It.IsAny<ChatSessionConfig>(), It.IsAny<CancellationToken>()))

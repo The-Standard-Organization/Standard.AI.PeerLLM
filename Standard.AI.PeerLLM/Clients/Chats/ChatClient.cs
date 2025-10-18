@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Standard.AI.PeerLLM.Models.Foundations.Chats;
+using Standard.AI.PeerLLM.Models.Foundations.Chats.Exceptions;
 using Standard.AI.PeerLLM.Services.Foundations.Chats;
+using Xeptions;
 
 namespace Standard.AI.PeerLLM.Clients.Chats
 {
@@ -18,10 +20,25 @@ namespace Standard.AI.PeerLLM.Clients.Chats
         public ChatClient(IChatService chatService) =>
             this.chatService = chatService;
 
-        public ValueTask<Guid> StartChatAsync(
+        public async ValueTask<Guid> StartChatAsync(
             ChatSessionConfig chatSessionConfig,
-            CancellationToken cancellationToken = default) =>
-                this.chatService.StartChatAsync(chatSessionConfig, cancellationToken);
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await this.chatService.StartChatAsync(chatSessionConfig, cancellationToken);
+            }
+            catch (ChatValidationException chatValidationException)
+            {
+                throw CreateChatClientValidationException(
+                    chatValidationException.InnerException as Xeption);
+            }
+            catch (ChatDependencyValidationException chatDependencyValidationException)
+            {
+                throw CreateChatClientValidationException(
+                    chatDependencyValidationException.InnerException as Xeption);
+            }
+        }
 
         public IAsyncEnumerable<string> StreamChatAsync(
             Guid conversationId,
@@ -33,5 +50,14 @@ namespace Standard.AI.PeerLLM.Clients.Chats
             Guid conversationId,
             CancellationToken cancellationToken = default) =>
                 throw new NotImplementedException();
+
+        private static ChatClientValidationException CreateChatClientValidationException(
+            Xeption innerException)
+        {
+            return new ChatClientValidationException(
+                message: "Chat client validation error occurred, fix errors and try again.",
+                innerException,
+                data: innerException.Data);
+        }
     }
 }
