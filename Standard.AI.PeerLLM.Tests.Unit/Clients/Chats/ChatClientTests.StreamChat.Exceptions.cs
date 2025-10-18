@@ -91,5 +91,49 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
 
             this.chatServiceMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnStreamChatIfServiceErrorOccurredAsync()
+        {
+            // given
+            Guid someConversationId = Guid.NewGuid();
+            string someText = GetRandomString();
+            CancellationToken cancellationToken = CancellationToken.None;
+            var serviceException = new Exception();
+
+            var failedChatClientServiceException =
+                new FailedChatClientServiceException(
+                    message: "Failed chat client service error occurred, contact support.",
+                    innerException: serviceException,
+                    data: serviceException.Data);
+
+            var expectedChatClientServiceException =
+                new ChatClientServiceException(
+                    message: "Chat client service error occurred, contact support.",
+                    innerException: failedChatClientServiceException as Xeption,
+                    data: failedChatClientServiceException.Data);
+
+            this.chatServiceMock.Setup(service =>
+                service.StreamChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                    .Throws(serviceException);
+
+            // when
+            Task StreamChatTask() => EnumerateAsync(
+                source: this.chatClient.StreamChatAsync(someConversationId, someText, cancellationToken),
+                cancellationToken);
+
+            ChatClientServiceException actualChatClientServiceException =
+                await Assert.ThrowsAsync<ChatClientServiceException>(StreamChatTask);
+
+            // then
+            actualChatClientServiceException.Should()
+                .BeEquivalentTo(expectedChatClientServiceException);
+
+            this.chatServiceMock.Verify(service =>
+                service.StreamChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                    Times.Once);
+
+            this.chatServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
