@@ -51,5 +51,43 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Clients.Chats
 
             this.chatServiceMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(DependencyExceptions))]
+        public async Task ShouldThrowDependencyExceptionOnEndChatIfDependencyErrorOccurredAsync(
+            Xeption dependencyException)
+        {
+            // given
+            Guid someConversationId = Guid.NewGuid();
+            CancellationToken cancellationToken = CancellationToken.None;
+
+            var expectedChatClientDependencyException =
+                new ChatClientDependencyException(
+                    message: "Chat client dependency error occurred, contact support.",
+                    innerException: dependencyException.InnerException as Xeption,
+                    data: dependencyException.InnerException.Data);
+
+            this.chatServiceMock.Setup(service =>
+                service.EndChatAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                    .ThrowsAsync(dependencyException);
+
+            // when
+            ValueTask<string> endChatTask =
+                this.chatClient.EndChatAsync(someConversationId, cancellationToken);
+
+            ChatClientDependencyException actualChatClientDependencyException =
+                await Assert.ThrowsAsync<ChatClientDependencyException>(
+                    endChatTask.AsTask);
+
+            // then
+            actualChatClientDependencyException.Should()
+                .BeEquivalentTo(expectedChatClientDependencyException);
+
+            this.chatServiceMock.Verify(service =>
+                service.EndChatAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()),
+                    Times.Once);
+
+            this.chatServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
