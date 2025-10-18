@@ -73,29 +73,7 @@ namespace Standard.AI.PeerLLM.Infrastructure.Services
 
                                 new TestTask
                                 {
-                                    Name = "Run Unit Tests",
-                                    Shell = "pwsh",
-                                    Run =
-                                        """
-                                        $projects = Get-ChildItem -Path . -Filter "*Tests.Unit*.csproj" -Recurse
-                                        foreach ($project in $projects) {
-                                          Write-Host "Running tests for: $($project.FullName)"
-                                          dotnet test $project.FullName --no-build --verbosity normal
-                                        }
-                                        """
-                                },
-
-                                new TestTask
-                                {
-                                    Name = "Run Acceptance Tests",
-                                    Run =
-                                        """
-                                        $projects = Get-ChildItem -Path . -Filter "*Tests.Acceptance*.csproj" -Recurse
-                                        foreach ($project in $projects) {
-                                          Write-Host "Running tests for: $($project.FullName)"
-                                          dotnet test $project.FullName --no-build --verbosity normal
-                                        }
-                                        """
+                                    Name = "Test"
                                 }
                             }
                         }
