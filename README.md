@@ -1,19 +1,54 @@
-# [Standard.AI.PeerLLM]
+# Standard.AI.PeerLLM
 
 [![Build](https://github.com/The-Standard-Organization/Standard.AI.PeerLLM/actions/workflows/build.yml/badge.svg)](https://github.com/The-Standard-Organization/Standard.AI.PeerLLM/actions/workflows/build.yml)
 [![The Standard](https://img.shields.io/github/v/release/hassanhabib/The-Standard?filter=v2.10.2&style=default&label=Standard%20Version&color=2ea44f)](https://github.com/hassanhabib/The-Standard)
 [![The Standard - COMPLIANT](https://img.shields.io/badge/The_Standard-COMPLIANT-2ea44f)](https://github.com/hassanhabib/The-Standard)
 [![The Standard Community](https://img.shields.io/discord/934130100008538142?color=%237289da&label=The%20Standard%20Community&logo=Discord)](https://discord.gg/vdPZ7hS52X)
 
-## Introduction
+---
 
-Standard.AI.PeerLLM — A Standardized .NET library for PeerLLM, enabling developers to integrate AI-powered solutions into their .NET applications.
+## 🧠 Introduction
 
+**Standard.AI.PeerLLM** — A standardized .NET library for [PeerLLM](https://www.peerllm.com), enabling developers to integrate AI-powered and decentralized intelligence into their .NET applications.
 
-### Chats
-The following example demonstrate how you can write your first Completions program.
+This library follows **The Standard** design and architectural principles — ensuring ethical, maintainable, and testable AI-driven software systems that can be trusted, evolved, and reused across teams and organizations.
 
-#### Program.cs
+---
+
+## 🌐 What is PeerLLM?
+
+**PeerLLM** is a decentralized, community-powered AI network where compute, data, and models are contributed by individuals (“hosts”).  
+Consumers of AI services — such as inference or fine-tuning — can access that distributed capacity securely and transparently.
+
+Unlike traditional centralized AI providers, PeerLLM distributes ownership, computation, and benefit — allowing everyone to participate in the AI economy.
+
+**Key Pillars:**
+- ⚖️ **Fairness & Transparency** — Governance and accounting built into the network.  
+- 🧩 **Open Collaboration** — Compute, data, and models shared through standardized APIs.  
+- 💡 **Democratized Access** — AI for everyone, not just a few centralized providers.  
+
+---
+
+## 🚀 Why .NET Developers Should Build on PeerLLM
+
+PeerLLM gives .NET developers the power to build AI-driven applications that are **private**, **distributed**, and **community-powered** — all without relying on a single centralized provider.
+
+By integrating your .NET app with the PeerLLM network, you can:
+
+- **🖥️ Run Anywhere** — Deploy on Windows, Linux, or macOS using familiar .NET tooling while connecting seamlessly to a global AI host network.  
+- **🔒 Stay Private** — Keep user data and chat history client-side or within your own infrastructure, with no centralized data collection.  
+- **⚡ Scale Efficiently** — Tap into distributed compute provided by community hosts instead of managing expensive cloud clusters.  
+- **🤖 Extend with AI** — Call into local or remote models (like Mistral or LLaMA) through PeerLLM’s simple APIs for inference, fine-tuning, or orchestration.  
+- **💰 Contribute and Earn** — Turn your .NET service or desktop app into a PeerLLM Host and earn tokens by serving AI workloads.
+
+> 🧩 **Build smarter, faster, and more independently — with .NET on PeerLLM, your code becomes part of a decentralized AI ecosystem designed for fairness, transparency, and innovation.**
+
+---
+
+## 🧪 Quick Start — Your First PeerLLM Chat
+
+Here’s how you can start your first chat completion program in .NET:
+
 ```csharp
 using System;
 using System.Threading.Tasks;
@@ -26,28 +61,32 @@ namespace ExamplePeerLLMDotNet
         static async Task Main(string[] args)
         {
             var peerLLMConfiguration = new PeerLLMConfiguration();
-
-            PeerLLMClient peerLLMClient =
+            
+            var peerLLMClient = 
                 new PeerLLMClient(peerLLMConfiguration);
-
-            ChatSessionConfig chatSessionConfig = new ChatSessionConfig
+            
+            var chatSessionConfig = new ChatSessionConfig
             {
                 ModelName = "mistral-7b-instruct-v0.1.Q8_0",
             };
-
-            Guid conversationId = await peerLLMClient.V1.Chats.StartChatAsync(chatSessionConfig);
+            
+            Guid conversationId = 
+                await peerLLMClient.V1.Chats
+                    .StartChatAsync(chatSessionConfig);
+            
             List<string> tokens = new List<string>();
-
-            IAsyncEnumerable<string> responseStream = peerLLMClient.V1.Chats.StreamChatAsync(
-                conversationId,
-                text: "Hello, how are you?");
-
+            
+            IAsyncEnumerable<string> responseStream =
+                peerLLMClient.V1.Chats.StreamChatAsync(
+                    conversationId,
+                    text: "Hello, how are you?");
+            
             await foreach (string token in responseStream)
             {
-                tokens.Add(token);
+                Console.Write(token);
             }
-
-            Console.WriteLine(string.Concat(tokens));
+            
+            Console.WriteLine("Chat session ended.");
         }
     }
 }
