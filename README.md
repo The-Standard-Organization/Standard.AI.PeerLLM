@@ -1,5 +1,8 @@
 # Standard.AI.PeerLLM
 
+![Standard.AI.OpenAI](https://raw.githubusercontent.com/the-standard-organization/Standard.AI.PeerLLM/main/Standard.AI.PeerLLM/standard-ai-peerllm-cover-big.png)
+
+
 [![Build](https://github.com/The-Standard-Organization/Standard.AI.PeerLLM/actions/workflows/build.yml/badge.svg)](https://github.com/The-Standard-Organization/Standard.AI.PeerLLM/actions/workflows/build.yml)
 [![The Standard](https://img.shields.io/github/v/release/hassanhabib/The-Standard?filter=v2.10.2&style=default&label=Standard%20Version&color=2ea44f)](https://github.com/hassanhabib/The-Standard)
 [![The Standard - COMPLIANT](https://img.shields.io/badge/The_Standard-COMPLIANT-2ea44f)](https://github.com/hassanhabib/The-Standard)
@@ -60,7 +63,8 @@ namespace ExamplePeerLLMDotNet
     {
         static async Task Main(string[] args)
         {
-            var peerLLMConfiguration = new PeerLLMConfiguration();
+            var peerLLMConfiguration =
+                new PeerLLMConfiguration();
             
             var peerLLMClient = 
                 new PeerLLMClient(peerLLMConfiguration);
@@ -73,8 +77,6 @@ namespace ExamplePeerLLMDotNet
             Guid conversationId = 
                 await peerLLMClient.V1.Chats
                     .StartChatAsync(chatSessionConfig);
-            
-            List<string> tokens = new List<string>();
             
             IAsyncEnumerable<string> responseStream =
                 peerLLMClient.V1.Chats.StreamChatAsync(
