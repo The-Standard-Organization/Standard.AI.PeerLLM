@@ -26,18 +26,21 @@ namespace ExamplePeerLLMDotNet
         static async Task Main(string[] args)
         {
             var peerLLMConfiguration = new PeerLLMConfiguration();
-            PeerLLMClient peerLLMClient = new PeerLLMClient(peerLLMConfiguration);
+
+            PeerLLMClient peerLLMClient =
+                new PeerLLMClient(peerLLMConfiguration);
 
             ChatSessionConfig chatSessionConfig = new ChatSessionConfig
             {
                 ModelName = "mistral-7b-instruct-v0.1.Q8_0",
             };
 
-            Guid conversationId = await this.peerLLMClient.V1.Chats.StartChatAsync(chatSessionConfig);
+            Guid conversationId = await peerLLMClient.V1.Chats.StartChatAsync(chatSessionConfig);
             List<string> tokens = new List<string>();
 
-            IAsyncEnumerable<string> responseStream = this.peerLLMClient.V1.Chats.StreamChatAsync(
-                conversationId, text: "Hello, how are you?");
+            IAsyncEnumerable<string> responseStream = peerLLMClient.V1.Chats.StreamChatAsync(
+                conversationId,
+                text: "Hello, how are you?");
 
             await foreach (string token in responseStream)
             {
