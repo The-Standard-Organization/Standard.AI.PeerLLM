@@ -122,7 +122,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats.V1
 
             var tooManyRequestsChatException =
                 new TooManyRequestsChatException(
-                    message: "Conversation not found",
+                    message: httpRequestException.Message,
                     innerException: httpRequestException,
                     data: httpRequestException.Data);
 
