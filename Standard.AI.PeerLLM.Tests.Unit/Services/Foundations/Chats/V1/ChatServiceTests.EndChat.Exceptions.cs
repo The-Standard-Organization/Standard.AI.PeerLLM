@@ -107,6 +107,52 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats.V1
         }
 
         [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnEndChatIfTooManyRequestsOccurredAsync()
+        {
+            // given
+            Guid someConversationId = Guid.NewGuid();
+            string someText = GetRandomString();
+            CancellationToken cancellationToken = CancellationToken.None;
+
+            var httpRequestException =
+                new HttpRequestException(
+                    message: "Too Many Requests",
+                    inner: null,
+                    statusCode: System.Net.HttpStatusCode.TooManyRequests);
+
+            var tooManyRequestsChatException =
+                new TooManyRequestsChatException(
+                    message: "Conversation not found",
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+            var expectedChatDependencyValidationException =
+                new ChatDependencyValidationException(
+                    message: "Chat dependency validation error occurred, fix errors and try again.",
+                    innerException: tooManyRequestsChatException);
+
+            this.peerLLMBrokerMock.Setup(broker =>
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                    .Throws(httpRequestException);
+
+            // when
+            ValueTask<string> endChatTask = this.chatService.EndChatAsync(someConversationId, cancellationToken);
+
+            ChatDependencyValidationException actualChatDependencyValidationException =
+                await Assert.ThrowsAsync<ChatDependencyValidationException>(endChatTask.AsTask);
+
+            // then
+            actualChatDependencyValidationException.Should()
+                .BeEquivalentTo(expectedChatDependencyValidationException);
+
+            this.peerLLMBrokerMock.Verify(broker =>
+                broker.EndChatAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+                    Times.Once);
+
+            this.peerLLMBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async Task ShouldThrowDependencyValidationExceptionOnEndChatIfExternalErrorOccurredAsync()
         {
             // given
