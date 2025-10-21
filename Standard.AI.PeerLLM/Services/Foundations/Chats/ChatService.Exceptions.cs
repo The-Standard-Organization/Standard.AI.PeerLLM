@@ -146,6 +146,16 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
                 throw CreateDependencyValidationException(tooManyRequestsChatException);
             }
             catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.Forbidden)
+            {
+                var tooManyRequestsChatException = new ForbiddenChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(tooManyRequestsChatException);
+            }
+            catch (HttpRequestException httpRequestException)
             {
                 var externalChatException = new ExternalChatException(
                     message: "External validation error",
