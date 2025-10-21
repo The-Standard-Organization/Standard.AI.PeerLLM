@@ -33,6 +33,56 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
                 throw CreateValidationException(invalidChatSessionConfigException);
             }
             catch (HttpRequestException httpRequestException)
+                            when (httpRequestException.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var hostNotFoundException = new HostNotFoundChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(hostNotFoundException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.NotFound)
+            {
+                var conversationNotFoundChatException = new ConversationNotFoundChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(conversationNotFoundChatException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.TooManyRequests)
+            {
+                var tooManyRequestsChatException = new TooManyRequestsChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(tooManyRequestsChatException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.Forbidden)
+            {
+                var forbiddenChatException = new ForbiddenChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(forbiddenChatException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                var unauthorizedChatException = new UnauthorizedChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(unauthorizedChatException);
+            }
+            catch (HttpRequestException httpRequestException)
             {
                 var hostNotFoundException = new HostNotFoundChatException(
                     message: "No hosts available for this model",
@@ -65,10 +115,10 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
                 throw CreateValidationException(invalidArgumentsChatException);
             }
             catch (HttpRequestException httpRequestException)
-                when (httpRequestException.StatusCode == HttpStatusCode.BadRequest)
+                            when (httpRequestException.StatusCode == HttpStatusCode.BadRequest)
             {
                 var hostNotFoundException = new HostNotFoundChatException(
-                    message: "Host unavailable",
+                    message: httpRequestException.Message,
                     innerException: httpRequestException,
                     data: httpRequestException.Data);
 
@@ -78,11 +128,41 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
                 when (httpRequestException.StatusCode == HttpStatusCode.NotFound)
             {
                 var conversationNotFoundChatException = new ConversationNotFoundChatException(
-                    message: "Conversation not found",
+                    message: httpRequestException.Message,
                     innerException: httpRequestException,
                     data: httpRequestException.Data);
 
                 throw CreateDependencyValidationException(conversationNotFoundChatException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.TooManyRequests)
+            {
+                var tooManyRequestsChatException = new TooManyRequestsChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(tooManyRequestsChatException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.Forbidden)
+            {
+                var forbiddenChatException = new ForbiddenChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(forbiddenChatException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                var unauthorizedChatException = new UnauthorizedChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(unauthorizedChatException);
             }
             catch (HttpRequestException httpRequestException)
             {
@@ -116,10 +196,10 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
                 throw CreateValidationException(invalidArgumentsChatException);
             }
             catch (HttpRequestException httpRequestException)
-                when (httpRequestException.StatusCode == HttpStatusCode.BadRequest)
+                           when (httpRequestException.StatusCode == HttpStatusCode.BadRequest)
             {
                 var hostNotFoundException = new HostNotFoundChatException(
-                    message: "Host unavailable",
+                    message: httpRequestException.Message,
                     innerException: httpRequestException,
                     data: httpRequestException.Data);
 
@@ -129,11 +209,41 @@ namespace Standard.AI.PeerLLM.Services.Foundations.Chats
                 when (httpRequestException.StatusCode == HttpStatusCode.NotFound)
             {
                 var conversationNotFoundChatException = new ConversationNotFoundChatException(
-                    message: "Conversation not found",
+                    message: httpRequestException.Message,
                     innerException: httpRequestException,
                     data: httpRequestException.Data);
 
                 throw CreateDependencyValidationException(conversationNotFoundChatException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.TooManyRequests)
+            {
+                var tooManyRequestsChatException = new TooManyRequestsChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(tooManyRequestsChatException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.Forbidden)
+            {
+                var forbiddenChatException = new ForbiddenChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(forbiddenChatException);
+            }
+            catch (HttpRequestException httpRequestException)
+                when (httpRequestException.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                var unauthorizedChatException = new UnauthorizedChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+                throw CreateDependencyValidationException(unauthorizedChatException);
             }
             catch (HttpRequestException httpRequestException)
             {
