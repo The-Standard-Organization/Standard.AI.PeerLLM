@@ -30,7 +30,7 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats.V1
 
             var hostNotFoundChatException =
                 new HostNotFoundChatException(
-                    message: "Host unavailable",
+                    message: httpRequestException.Message,
                     innerException: httpRequestException,
                     data: httpRequestException.Data);
 
