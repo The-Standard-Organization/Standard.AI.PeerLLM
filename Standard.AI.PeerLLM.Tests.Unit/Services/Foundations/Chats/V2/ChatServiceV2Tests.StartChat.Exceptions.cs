@@ -122,6 +122,112 @@ namespace Standard.AI.PeerLLM.Tests.Unit.Services.Foundations.Chats.V2
         }
 
         [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnStartChatIfForbiddenOccurredAsync()
+        {
+            // given
+            ChatSessionConfigV2 someChatSessionConfig = CreateRandomChatSessionConfig();
+            CancellationToken cancellationToken = CancellationToken.None;
+
+            var httpRequestException =
+                new HttpRequestException(
+                    message: "Forbidden",
+                    inner: null,
+                    statusCode: System.Net.HttpStatusCode.Forbidden);
+
+            var forbiddenChatException =
+                new ForbiddenChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+            var expectedChatDependencyValidationException =
+                new ChatDependencyValidationException(
+                    message: "Chat dependency validation error occurred, fix errors and try again.",
+                    innerException: forbiddenChatException);
+
+            this.peerLLMBrokerMock.Setup(broker =>
+                broker.StartChatV2Async(
+                    It.IsAny<ChatSessionConfigV2>(),
+                    It.IsAny<string>(),
+                    It.IsAny<CancellationToken>()))
+                        .ThrowsAsync(httpRequestException);
+
+            // when
+            ValueTask<Guid> startChatTask =
+                this.chatServiceV2.StartChatAsync(someChatSessionConfig, cancellationToken);
+
+            ChatDependencyValidationException actualChatDependencyValidationException =
+                await Assert.ThrowsAsync<ChatDependencyValidationException>(
+                    startChatTask.AsTask);
+
+            // then
+            actualChatDependencyValidationException.Should()
+                .BeEquivalentTo(expectedChatDependencyValidationException);
+
+            this.peerLLMBrokerMock.Verify(broker =>
+                broker.StartChatV2Async(
+                    It.IsAny<ChatSessionConfigV2>(),
+                    It.IsAny<string>(),
+                    It.IsAny<CancellationToken>()),
+                        Times.Once);
+
+            this.peerLLMBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnStartChatIfUnauthorizedOccurredAsync()
+        {
+            // given
+            ChatSessionConfigV2 someChatSessionConfig = CreateRandomChatSessionConfig();
+            CancellationToken cancellationToken = CancellationToken.None;
+
+            var httpRequestException =
+                new HttpRequestException(
+                    message: "Unauthorized",
+                    inner: null,
+                    statusCode: System.Net.HttpStatusCode.Unauthorized);
+
+            var unauthorizedChatException =
+                new UnauthorizedChatException(
+                    message: httpRequestException.Message,
+                    innerException: httpRequestException,
+                    data: httpRequestException.Data);
+
+            var expectedChatDependencyValidationException =
+                new ChatDependencyValidationException(
+                    message: "Chat dependency validation error occurred, fix errors and try again.",
+                    innerException: unauthorizedChatException);
+
+            this.peerLLMBrokerMock.Setup(broker =>
+                broker.StartChatV2Async(
+                    It.IsAny<ChatSessionConfigV2>(),
+                    It.IsAny<string>(),
+                    It.IsAny<CancellationToken>()))
+                        .ThrowsAsync(httpRequestException);
+
+            // when
+            ValueTask<Guid> startChatTask =
+                this.chatServiceV2.StartChatAsync(someChatSessionConfig, cancellationToken);
+
+            ChatDependencyValidationException actualChatDependencyValidationException =
+                await Assert.ThrowsAsync<ChatDependencyValidationException>(
+                    startChatTask.AsTask);
+
+            // then
+            actualChatDependencyValidationException.Should()
+                .BeEquivalentTo(expectedChatDependencyValidationException);
+
+            this.peerLLMBrokerMock.Verify(broker =>
+                broker.StartChatV2Async(
+                    It.IsAny<ChatSessionConfigV2>(),
+                    It.IsAny<string>(),
+                    It.IsAny<CancellationToken>()),
+                        Times.Once);
+
+            this.peerLLMBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async Task ShouldThrowServiceExceptionOnStartChatIfServiceErrorOccurredAsync()
         {
             // given
