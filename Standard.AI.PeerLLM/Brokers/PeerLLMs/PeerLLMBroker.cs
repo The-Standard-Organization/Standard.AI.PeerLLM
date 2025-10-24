@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
@@ -106,10 +105,9 @@ namespace Standard.AI.PeerLLM.Brokers.PeerLLMs
 
             if (!string.IsNullOrWhiteSpace(this.peerLLMConfiguration.ApiKey))
             {
-                httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue(
-                    scheme: "Bearer",
-                    parameter: this.peerLLMConfiguration.ApiKey);
+                httpClient.DefaultRequestHeaders.Add(
+                    name: "X-API-Key",
+                    value: this.peerLLMConfiguration.ApiKey);
             }
 
             return httpClient;

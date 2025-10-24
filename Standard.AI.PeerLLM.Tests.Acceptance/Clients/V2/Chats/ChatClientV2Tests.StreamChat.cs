@@ -30,7 +30,7 @@ namespace Standard.AI.PeerLLM.Tests.Acceptance.Clients.V2.Chats
                 Request.Create()
                 .UsingPost()
                     .WithPath("/api/v2/chats/stream")
-                    .WithHeader("Authorization", $"Bearer {this.apiKey}")
+                    .WithHeader("X-API-Key", this.apiKey)
                     .WithHeader("Content-Type", "application/json; charset=utf-8")
                     .WithBody(expectedBody))
                 .RespondWith(
